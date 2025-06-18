@@ -28,7 +28,7 @@ class Actividad_practica extends Model
         return $this->belongsTo(Curso::class, 'id_curso');
     }
 
-    public function preguntas() {
-        return $this->hasMany(Pregunta::class, 'id_practica', 'id_pregunta');
+    public function preguntasActividad() {
+        return $this->hasMany(Pregunta_actividad_practica::class, 'id_practica', 'id_pregunta');
     }
 }

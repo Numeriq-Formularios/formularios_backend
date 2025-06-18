@@ -15,7 +15,7 @@ class Pregunta_actividad_practica extends Model
 
     public function actividad_practica()
     {
-        return $this->hasOne(Actividad_practica::class, 'id_practica');
+        return $this->belongsTo(Actividad_practica::class, 'id_practica');
     }
 
     public function pregunta()
