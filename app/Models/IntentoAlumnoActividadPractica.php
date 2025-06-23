@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Alumno;
+use App\Models\ActividadPractica;
 
-class Intento_alumno_actividad_examen extends Model
+class IntentoAlumnoActividadPractica extends Model
 {
-    protected $table = 'intento_alumno_actividad_examen';
+    protected $table = 'intento_alumno_actividad_practica';
 
     protected $fillable = [
         'fecha_inicio',
@@ -20,8 +22,8 @@ class Intento_alumno_actividad_examen extends Model
         return $this->belongsTo(Alumno::class, 'id_alumno');
     }
 
-    public function actividadExamen()
+    public function actividadPractica()
     {
-        return $this->belongsTo(Actividad_examen::class, 'id_actividad_examen');
+        return $this->belongsTo(ActividadPractica::class, 'id_actividad_practica');
     }
 }

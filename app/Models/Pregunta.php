@@ -5,14 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Docente;
 use App\Models\Tema;
-use App\Models\Nivel_bloom;
+use App\Models\NivelBloom;
 use App\Models\Dificultad;
-use App\Models\Tipo_pregunta;
-use App\Models\Pregunta_actividad_examen;       
-use App\Models\Opcion_respuesta;
+use App\Models\TipoPregunta;
+use App\Models\PreguntaActividadExamen;       
+use App\Models\OpcionRespuesta;
 
 class Pregunta extends Model
 {
+    protected $table = 'preguntas';
     protected $fillable = [
         'id_docente',
         'id_tema',
@@ -36,7 +37,7 @@ class Pregunta extends Model
     // Relación: Una pregunta pertenece a un nivel de Bloom
     public function nivelBloom()
     {
-        return $this->belongsTo(Nivel_bloom::class, 'id_nivel_bloom');
+        return $this->belongsTo(NivelBloom::class, 'id_nivel_bloom');
     }
     // Relación: Una pregunta pertenece a una dificultad
     public function dificultad()
@@ -46,19 +47,32 @@ class Pregunta extends Model
     // Relación: Una pregunta pertenece a un tipo de pregunta
     public function tipoPregunta()
     {
-        return $this->belongsTo(Tipo_pregunta::class, 'id_tipo_pregunta');
+        return $this->belongsTo(TipoPregunta::class, 'id_tipo_pregunta');
     }
 
-    // Relación: Una pregunta pertenece a preguntas de actividad examen
-    public function preguntaActividadExamen()
-    {
-        return $this->hasMany(Pregunta_actividad_examen::class, 'id_pregunta');
-    }
-
+    
        // Relación: Una pregunta tiene muchas opciones de respuesta
     public function opcionesRespuesta()
     {
-        return $this->hasMany(Opcion_respuesta::class, 'id_pregunta');
+        return $this->hasMany(OpcionRespuesta::class, 'id_pregunta');
     }
+
+    public function actividadExamenes()
+    {
+        return $this->belongsToMany(ActividadExamen::class, 'pregunta_actividad_examen', 'id_pregunta', 'id_actividad_examen')
+            ->using(PreguntaActividadExamen::class)
+            ->withPivot('orden')
+            ->withTimestamps();
+    }
+
+    public function actividadPracticas(){
+        return $this->belongsToMany(ActividadPractica::class, 'pregunta_actividad_practica', 'id_pregunta', 'id_actividad_practica')
+            ->using(PreguntaActividadExamen::class)
+            ->withPivot('orden')
+            ->withTimestamps();
+    }
+
+
+
 
 }

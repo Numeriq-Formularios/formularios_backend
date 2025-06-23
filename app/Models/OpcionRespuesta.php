@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Pregunta;
-use App\Models\Resultado_pregunta_actividad_practica;
-use App\Models\Resultado_pregunta_actividad_examen;
+use App\Models\ResultadoPreguntaActividadPractica;
+use App\Models\ResultadoPreguntaActividadExamen;
 
-class Opcion_respuesta extends Model
+class OpcionRespuesta extends Model
 {
+    protected $table = 'opcion_respuesta';
+
+    // Definimos los campos que se pueden llenar
 
    protected $fillable = [
         'id_pregunta',
@@ -25,13 +28,13 @@ class Opcion_respuesta extends Model
     // Relación: Una opción de respuesta tiene muchos resultados de pregunta en actividad práctica
     public function resultadosPreguntaActividadPractica()
     {
-        return $this->hasMany(Resultado_pregunta_actividad_practica::class, 'id_opcion_respuesta');
+        return $this->hasMany(ResultadoPreguntaActividadPractica::class, 'id_opcion_seeleccionada');
     }
 
        // Relación: Una opción de respuesta tiene muchos resultados de pregunta en actividad examen
     public function resultadosPreguntaActividadExamen()
     {
-        return $this->hasMany(Resultado_pregunta_actividad_examen::class, 'id_opcion_respuesta');
+        return $this->hasMany(ResultadoPreguntaActividadExamen::class, 'id_opcion_seleccionada');
     }
 
 }

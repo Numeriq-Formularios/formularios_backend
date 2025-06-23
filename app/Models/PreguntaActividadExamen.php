@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Actividad_examen;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use App\Models\ActividadExamen;
 use App\Models\Pregunta;
 
-class Pregunta_actividad_examen extends Model
+class PreguntaActividadExamen extends Pivot
 {
+    protected $table = 'pregunta_actividad_examen';
+
+    // Definimos los campos que se pueden llenar
  protected $fillable = [
         'id_actividad_examen',
         'id_pregunta',
@@ -16,8 +19,9 @@ class Pregunta_actividad_examen extends Model
 
     public function actividadExamen()
     {
-        return $this->belongsTo(Actividad_examen::class, 'id_actividad_examen');
+        return $this->belongsTo(ActividadExamen::class, 'id_actividad_examen');
     }
+    
     // Relación: Una pregunta puede pertenecer a muchas actividades de examen
     public function pregunta()
     {

@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Pregunta;
 
-class Nivel_bloom extends Model
+class NivelBloom extends Model
 {
 
+    protected $table = 'nivel_bloom';
 
  protected $fillable = [
         'nombre',

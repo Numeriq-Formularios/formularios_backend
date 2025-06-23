@@ -7,8 +7,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+use App\Models\Usuario;
+use App\Models\Curso;
+use App\Models\Especializacion;
+use App\Models\ActividadExamen;
+use App\Models\Pregunta;
+use App\Models\ActividadPractica;
+
 class Docente extends Model
 {
+    protected $table = 'docentes';
 
     protected $fillable = [
         'titulo_profesional',
@@ -40,4 +48,20 @@ class Docente extends Model
 
     }
 
+    //Relacion docentes con actividadExamen 1 a n 
+    public function actividadExamen(): HasMany
+    {
+        return $this->hasMany(ActividadExamen::class, 'id_docente');
+    }
+
+    public function preguntas(): HasMany
+    {
+        return $this->hasMany(Pregunta::class, 'id_docente');
+    }
+
+        //Relacion docentes con actividadExamen 1 a n 
+    public function actividadPractica(): HasMany
+    {
+        return $this->hasMany(ActividadPractica::class, 'id_docente');
+    }
 }

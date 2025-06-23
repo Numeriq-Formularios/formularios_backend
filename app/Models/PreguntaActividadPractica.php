@@ -2,20 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Pregunta_actividad_practica extends Model
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use App\Models\ActividadPractica;
+use App\Models\Pregunta;
+
+class PreguntaActividadPractica extends Pivot
 {
     protected $table = 'pregunta_actividad_practica';
 
     protected $fillable = [
+        'id_actividad_examen',
+        'id_pregunta',
         'orden',
-        'estado',
     ];
 
     public function actividad_practica()
     {
-        return $this->belongsTo(Actividad_practica::class, 'id_practica');
+        return $this->belongsTo(ActividadPractica::class, 'id_practica');
     }
 
     public function pregunta()

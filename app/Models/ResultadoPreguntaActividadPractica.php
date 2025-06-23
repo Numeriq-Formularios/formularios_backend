@@ -3,10 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use APP\Models\IntentoAlumnoActividadPractica;
+use App\Models\OpcionRespuesta;
+use App\Models\Pregunta;
 
-class Resultado_pregunta_actividad_examen extends Model
+
+class ResultadoPreguntaActividadPractica extends Model
 {
-    protected $table = 'resultado_pregunta_actividad_examen';
+    protected $table = 'resultado_pregunta_actividad_practica';
 
     protected $fillable = [
         'respuesta_texto',
@@ -18,12 +22,12 @@ class Resultado_pregunta_actividad_examen extends Model
 
     public function intento()
     {
-        return $this->belongsTo(intento_alumno_actividad_examen::class, 'id_intento');
+        return $this->belongsTo(IntentoAlumnoActividadPractica::class, 'id_intento');
     }
 
     public function opcionRespuesta()
     {
-        return $this->belongsTo(Opcion_respuesta::class, 'id_opcion_respuesta');
+        return $this->belongsTo(OpcionRespuesta::class, 'id_opcion_seleccionada');
     }
 
     public function pregunta()
@@ -31,3 +35,4 @@ class Resultado_pregunta_actividad_examen extends Model
         return $this->belongsTo(Pregunta::class, 'id_pregunta');
     }
 }
+

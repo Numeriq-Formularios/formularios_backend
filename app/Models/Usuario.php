@@ -6,13 +6,16 @@ namespace App\Models;
 
 //Las relaciones entre modelos se definen en los modelos correspondientes
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Alumno;
+use App\Models\Docente;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Sanctum\HasApiTokens;
 
 class Usuario extends Model
 {
-
+    protected $table = 'usuarios';
+    
     protected $fillable = [
         'nombre',
         'email',
@@ -22,7 +25,7 @@ class Usuario extends Model
     ];
 
     //Decir que el campo clave es el de password. Para el tema de la autentiticacion
-    
+
 
     //Relacion con el modelo de Alumno
         public function alumno(): HasOne {
