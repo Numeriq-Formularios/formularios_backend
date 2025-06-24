@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'usuarios',
+            'hash' => false, // Set to true if you want to hash the tokens
+        ],
     ],
 
     /*
@@ -60,15 +65,16 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        /*'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
+        */
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+         'usuarios' => [
+             'driver' => 'eloquent',
+             'model' => App\Models\Usuario::class,
+        ],
     ],
 
     /*
