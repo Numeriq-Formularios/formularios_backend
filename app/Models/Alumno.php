@@ -19,8 +19,10 @@ class Alumno extends Model
 
     protected $fillable = [
         'escolaridad',
-
     ];
+    
+    protected $primaryKey = 'id'; // Definir la clave primaria
+    public $incrementing = false; // La clave primaria no es autoincremental
 
 
     //Un Alumno pertenece a un usuario
