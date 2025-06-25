@@ -17,7 +17,6 @@ return new class extends Migration
             $table->integer('orden')->nullable();
             $table->boolean('estado')->default(true);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

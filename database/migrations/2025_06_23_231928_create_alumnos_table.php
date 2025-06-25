@@ -14,7 +14,6 @@ return new class extends Migration
             $table->id(); 
             $table->string('escolaridad');
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('id')->references('id')->on('usuarios')->onDelete('cascade');
         });

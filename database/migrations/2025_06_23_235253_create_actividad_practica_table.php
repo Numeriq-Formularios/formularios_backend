@@ -22,7 +22,6 @@ return new class extends Migration
             $table->decimal('umbral_aprobacion', 5, 2)->default(0);
             $table->boolean('estado')->default(true);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

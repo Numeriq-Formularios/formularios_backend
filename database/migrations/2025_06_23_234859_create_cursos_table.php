@@ -16,12 +16,10 @@ return new class extends Migration
             $table->foreignId('id_asignatura')->constrained('asignaturas')->onDelete('cascade');
             $table->string('nombre');
             $table->text('descripcion')->nullable();
-            $table->string('imagen')->nullable();
             $table->date('fecha_inicio');
             $table->date('fecha_fin')->nullable();
             $table->boolean('estado')->default(true);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

@@ -19,7 +19,6 @@ return new class extends Migration
             $table->decimal('puntaje_total', 5, 2)->nullable();
             $table->boolean('completado')->default(false);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

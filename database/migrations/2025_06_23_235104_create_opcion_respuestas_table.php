@@ -16,7 +16,6 @@ return new class extends Migration
             $table->text('texto_opcion');
             $table->boolean('es_correcta')->default(false);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

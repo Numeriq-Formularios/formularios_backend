@@ -21,7 +21,6 @@ return new class extends Migration
             $table->text('explicacion_docente')->nullable();
             $table->boolean('estado')->default(true);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

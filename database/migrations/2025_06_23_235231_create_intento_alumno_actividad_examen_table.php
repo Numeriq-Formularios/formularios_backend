@@ -13,13 +13,12 @@ return new class extends Migration
         Schema::create('intento_alumno_actividad_examen', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_alumno')->constrained('alumnos')->onDelete('cascade');
-            $table->foreignId('id_actividad_examen')->constrained('actividad_examens')->onDelete('cascade');
+            $table->foreignId('id_actividad_examen')->constrained('actividad_examenes')->onDelete('cascade');
             $table->timestamp('fecha_inicio')->nullable();
             $table->timestamp('fecha_fin')->nullable();
             $table->decimal('puntaje_total', 5, 2)->nullable();
             $table->boolean('completado')->default(false);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
