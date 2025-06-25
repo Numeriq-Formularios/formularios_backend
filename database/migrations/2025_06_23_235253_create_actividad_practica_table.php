@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void {
         Schema::create('actividad_practica', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_curso')->constrained('cursos')->onDelete('cascade');
-            $table->foreignId('id_docente')->constrained('docentes')->onDelete('cascade');
+            $table->foreignId('curso_id')->constrained('cursos')->onDelete('cascade');
+            $table->foreignId('docente_id')->constrained('docentes')->onDelete('cascade');
             $table->string('nombre');
             $table->text('descripcion')->nullable();
             $table->integer('cantidad_reactivos')->default(0);

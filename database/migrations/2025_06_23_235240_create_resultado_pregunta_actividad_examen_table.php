@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void {
         Schema::create('resultado_pregunta_actividad_examen', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_intento')->constrained('intento_alumno_actividad_examen')->onDelete('cascade');
-            $table->foreignId('id_opcion_res')->nullable()->constrained('opcion_respuestas')->onDelete('cascade');
-            $table->foreignId('id_pregunta')->constrained('preguntas')->onDelete('cascade');
+            $table->foreignId('intento_id')->constrained('intento_alumno_actividad_examen')->onDelete('cascade');
+            $table->foreignId('opcion_res_id')->nullable()->constrained('opcion_respuestas')->onDelete('cascade');
+            $table->foreignId('pregunta_id')->constrained('preguntas')->onDelete('cascade');
             $table->text('respuesta_texto')->nullable();
             $table->boolean('es_correcta')->default(false);
             $table->decimal('puntaje_obtenido', 5, 2)->nullable();

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void {
         Schema::create('intento_alumno_actividad_practica', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_alumno')->constrained('alumnos')->onDelete('cascade');
-            $table->foreignId('id_actividad_practica')->constrained('actividad_practica')->onDelete('cascade');
+            $table->foreignId('alumno_id')->constrained('alumnos')->onDelete('cascade');
+            $table->foreignId('actividad_practica_id')->constrained('actividad_practica')->onDelete('cascade');
             $table->timestamp('fecha_inicio')->nullable();
             $table->timestamp('fecha_fin')->nullable();
             $table->decimal('puntaje_total', 5, 2)->nullable();

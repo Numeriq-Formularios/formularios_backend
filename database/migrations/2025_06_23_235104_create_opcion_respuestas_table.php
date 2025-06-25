@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void {
         Schema::create('opcion_respuestas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_pregunta')->constrained('preguntas')->onDelete('cascade');
+            $table->foreignId('pregunta_id')->constrained('preguntas')->onDelete('cascade');
             $table->text('texto_opcion');
             $table->boolean('es_correcta')->default(false);
             $table->timestamps();
