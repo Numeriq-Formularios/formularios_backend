@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->string('email')->unique();
+            $table->string('correo')->unique();
             $table->string('clave');
             $table->string('foto_perfil')->nullable();
             $table->boolean('estado')->default(true);
