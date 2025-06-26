@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Usuario;
 use App\Models\Alumno;
+use GuzzleHttp\Psr7\Message;
 
 class UsuarioController extends Controller
 {
@@ -14,32 +15,44 @@ class UsuarioController extends Controller
 
     public function register(Request $request)
     {
-
-
         //Recopilo los del formulario de registro  
         $data = $request->validate([
             'nombre' => 'required|string|max:255',
             'correo' => 'required|string|email|max:255|unique:usuarios',
             'clave' => 'required|string|min:8',
-            'foto_perfil' => 'required|string|max:255',
+            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        if(isset($data['nombre']) && isset($data['correo']) && isset($data['clave']) && isset($data['foto_perfil'])) {
-            // Si todos los campos requeridos están presentes, continuar con el registro
-        } else {
-            return response()->json(['message' => 'Todos los campos son obligatorios'], 400);
-        }
-
-
-        
 
         //Se crea una instancia del modelo Usuario
         $usuario = new Usuario();
         $usuario->nombre = $data['nombre'];
         $usuario->correo = $data['correo'];
         $usuario->clave = bcrypt($data['clave']); // Encriptar la contraseña
-        $usuario->foto_perfil = $data['foto_perfil'] ?? null; // Si no se proporciona una foto, se establece como null
         $usuario->estado = true;
+        $usuario->save();
+
+
+        if ($request->hasfile('foto_perfil')) {
+
+            $image = $data['foto_perfil'];
+
+            //Extraer la extension de la imagen
+            $extensionImage = $image->getClientOriginalExtension();
+
+
+            //Nombre que tendra cada imagen
+            $imagename = "UserImage_" . $usuario->id . "id" . "." . $extensionImage;
+
+            //Se guarda la imagen con el id del usuario
+            $path = $image->storeAs("images/", $imagename, 'public');
+
+            //Se gurda la ruta en completa en la base de datos 
+            $usuario->foto_perfil = asset("storage/images/{$imagename}");
+        } else {
+            //Se gurda la ruta en completa en la base de datos 
+            $usuario->foto_perfil = asset("storage/images/user-default-Image.svg");
+        }
+
         $usuario->save();
 
         //Aqui es importante manejar la logica si el usuario es alumno o es docente.
@@ -58,7 +71,6 @@ class UsuarioController extends Controller
         return response()->json([
             'message' => 'Usuario registrado correctamente',
             'usuario' => $usuario,
-            'alumno' => $alumno,
             'token' => $token
         ], 201);
     }
@@ -90,8 +102,69 @@ class UsuarioController extends Controller
     }
 
 
-    public function update() {
+    public function update(Request $request, $id)
+    {
 
+        dd($request->method(), $request->input('_method'), $request->all());
+
+        //Primero recibo los datos  
+        $data = $request->validate([
+            'nombre' => 'nullable|string|max:255',
+            'correo' => 'nullable|string|email|max:255|unique:usuarios,correo,' . $id,
+            'clave' => 'nullable|string|min:8',
+            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+
+        //Busco el usuario
+        $usuario = Usuario::find($id);
+
+        if (!$usuario) {
+            return response()->json([
+                "message" => "El usuario no existe",
+            ], 404);
+        }
+
+
+
+        //El punto aqui es decir si recibes dato de un campo lo pones y guardas
+
+        if (isset($data['nombre'])) {
+            $usuario->nombre = $data['nombre'];
+        }
+
+        if (isset($data['correo'])) {
+            $usuario->correo = $data['correo'];
+        }
+
+        if (isset($data['clave'])) {
+            $usuario->clave = bcrypt($data['clave']);
+        }
+
+        if (isset($data['foto_perfil'])) {
+            $image = $data['foto_perfil'];
+
+            //Extraer la extension de la imagen
+            $extensionImage = $image->getClientOriginalExtension();
+
+
+            //Nombre que tendra cada imagen
+            $imagename = "UserImage_" . $usuario->id . "id" . "." . $extensionImage;
+
+            //Se guarda la imagen con el id del usuario
+            $path = $image->storeAs("images/", $imagename, 'public');
+
+            //Se gurda la ruta en completa en la base de datos 
+            $usuario->foto_perfil = asset("storage/images/{$imagename}");
+        }
+
+        $usuario->save();
+
+
+        return response()->json([
+            "message" => "Usuario actualizado correctamente",
+            "usuario" => $usuario,
+        ]);
     }
 
 
@@ -115,3 +188,9 @@ class UsuarioController extends Controller
         ], 200);
     }
 }
+
+
+//Significa que no se recibo imagen por lo que le asignamos una imagen por default para el usuario
+
+        //Necesito que esta imagen la pueda ver nada mas agarrando el campo de 
+        //foto_perfil osea que este dentro de la carpeta public

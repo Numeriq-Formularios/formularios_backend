@@ -14,10 +14,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::post('/logout',[AuthController::class, 'logout']);
 
-Route::get('/usuarios', [UsuarioController::class, 'showAll']);
-Route::get('/usuario/{id}', [UsuarioController::class, 'show']);
-//Route::PUT('/usuario/{id}', [UsuarioController::class, 'update']);
-Route::delete('/usuario/{id}', [UsuarioController::class, 'destroy']);
+//Seria ver como la logica que manejamos para crear docentes. 
+Route::post('/usuarios/nuevo/docente', []);
+
+Route::get('/usuarios', [UsuarioController::class, 'showAll']); //Mostrar varios usuarios en concreto 
+Route::get('/usuario/{id}', [UsuarioController::class, 'show']); //Mostrar un usuario en concreto
+
+//Actualizar un registro, utilizamos post porque en postman no permite subir imagenes
+Route::post('/usuario/{id}', [UsuarioController::class, 'update']); 
+Route::delete('/usuario/{id}', [UsuarioController::class, 'destroy']); //Eliminado logico 
+
 
 
 });
