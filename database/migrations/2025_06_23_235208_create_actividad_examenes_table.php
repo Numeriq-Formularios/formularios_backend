@@ -14,9 +14,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('curso_id')->constrained('cursos')->onDelete('cascade');
             $table->foreignId('docente_id')->constrained('docentes')->onDelete('cascade');
-            $table->string('nombre');
+            $table->string('nombre', 100);
             $table->text('descripcion')->nullable();
-            $table->string('modo')->nullable();
+            $table->string('modo', 50)->nullable();
             $table->integer('cantidad_reactivos')->default(0);
             $table->integer('tiempo_limite')->nullable();
             $table->integer('intentos_permitidos')->default(1);

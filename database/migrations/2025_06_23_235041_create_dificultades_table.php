@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('dificultades', function (Blueprint $table) {
             $table->id();
-            $table->string('nivel');
+            $table->string('nivel', 50);
             $table->timestamps();
         });
     }

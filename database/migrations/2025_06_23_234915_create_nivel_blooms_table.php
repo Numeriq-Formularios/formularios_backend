@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('nivel_blooms', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
+            $table->string('nombre', 100);
             $table->text('descripcion')->nullable();
             $table->boolean('estado')->default(true);
             $table->timestamps();

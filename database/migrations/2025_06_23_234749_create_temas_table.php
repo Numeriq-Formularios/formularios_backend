@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('temas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('asignatura_id')->constrained('asignaturas')->onDelete('cascade');
-            $table->string('nombre');
+            $table->string('nombre', 100);
             $table->boolean('estado')->default(true);
             $table->timestamps();
 

@@ -14,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('curso_id')->constrained('cursos')->onDelete('cascade');
             $table->foreignId('docente_id')->constrained('docentes')->onDelete('cascade');
-            $table->string('nombre');
+            $table->string('nombre', 100);
             $table->text('descripcion')->nullable();
             $table->integer('cantidad_reactivos')->default(0);
             $table->timestamp('fecha_creacion')->useCurrent();

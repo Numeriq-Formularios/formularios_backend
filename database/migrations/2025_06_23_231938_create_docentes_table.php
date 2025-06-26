@@ -13,8 +13,8 @@ return new class extends Migration
         Schema::create('docentes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
-            $table->string('titulo_profesional');
-            $table->string('linkedin')->nullable();
+            $table->string('titulo_profesional', 50);
+            $table->string('linkedin', 50)->nullable();
             $table->boolean('es_superusuario')->default(false);
             $table->timestamps();
         });
