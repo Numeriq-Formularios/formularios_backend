@@ -105,7 +105,7 @@ class UsuarioController extends Controller
     public function update(Request $request, $id)
     {
 
-        dd($request->method(), $request->input('_method'), $request->all());
+        
 
         //Primero recibo los datos  
         $data = $request->validate([
