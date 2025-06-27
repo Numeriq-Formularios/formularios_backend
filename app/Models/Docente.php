@@ -21,7 +21,8 @@ class Docente extends Model
     protected $fillable = [
         'titulo_profesional',
         'linkedin',
-        'es_superusuario'
+        'es_superusuario',
+        'estado'
     ];
 
 

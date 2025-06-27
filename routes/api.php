@@ -4,42 +4,36 @@ use App\Http\Controllers\AlumnoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\UsuarioController;
-
-
-
+use App\Http\Middleware\EnsureTokenIsValid;
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/singup/usuario/alumno', [UsuarioController::class, 'registerAlumno']);
+Route::post('/singup/usuario/alumno', [AlumnoController::class, 'register']);
 
 
 
 //Grupo de rutas autenticadas con Sanctum
 Route::middleware('auth:sanctum')->group(function () {
 
-//Esta accion la hace un SuperUsuario
-Route::post('/singup/usuario/docente', [UsuarioController::class, 'registerDocente']);
+Route::post('/singup/usuario/docente', [DocenteController::class, 'register']);
+
+//Rutas del usuario que es Alumno
+Route::get('/usuarios/alumnos', [AlumnoController::class, 'index']); //Mostrar varios usuarios en concreto 
+Route::get('/usuario/alumno/{id}', [AlumnoController::class, 'show']); //Mostar un alumno en concreto
+Route::post('/usuario/alumno/{id}', [AlumnoController::class, 'update']); //Actualizar un registro, utilizamos post porque en postman no permite subir imagenes
+Route::delete('/usuario/alumno/{id}', [AlumnoController::class, 'destroy']); //Eliminado logico en el id del usuario
+//Route::post('/usuario/alumno/curso/{id}', [AlumnoController::class, 'incribirCurso']);
+//Route::get('/usuario/alumno/{id}/curso', [AlumnoController::class, 'misCursos']); 
+
+//Rutas del usuario que es Docente
+Route::get('/usuarios/docentes/', [DocenteController::class, 'index']); 
+Route::get('/usuario/docente/{id}', [DocenteController::class, 'show']); 
+Route::post('/usuario/docente/{id}', [DocenteController::class, 'update']); //Actualizar un registro, utilizamos post porque en postman no permite subir imagenes
+Route::delete('/usuario/docente/{id}', [DocenteController::class, 'destroy']);
 
 //Aqui van las rutas que solo pueden acceder los usuarios autenticados
 Route::post('/logout',[AuthController::class, 'logout']);
-
-
-
-
-
-Route::get('/usuarios', [UsuarioController::class, 'showAll']); //Mostrar varios usuarios en concreto 
-Route::get('/usuario/{id}', [UsuarioController::class, 'show']); //Mostrar un usuario en concreto
-Route::post('/usuario/{id}', [UsuarioController::class, 'update']); //Actualizar un registro, utilizamos post porque en postman no permite subir imagenes
-Route::delete('/usuario/{id}', [UsuarioController::class, 'destroy']); //Eliminado logico 
-
-
-Route::get('/usuarios/alumnos/',[AlumnoController::class, 'showAll']); //Mostrar todos los usuarios que son alumnos
-//Mostarr el usuario que este enlazado a un alumno
-
-//Objetivo crear el controlador de alumno
-
-
-
 
 });
 

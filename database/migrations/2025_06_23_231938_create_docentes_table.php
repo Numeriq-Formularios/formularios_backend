@@ -9,12 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('docentes', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->string('titulo_profesional', 50);
             $table->string('linkedin', 50)->nullable();
             $table->boolean('es_superusuario')->default(false);
+            $table->boolean('estado')->default(true);
             $table->timestamps();
 
             $table->foreign('id')->references('id')->on('usuarios')->onDelete('cascade');

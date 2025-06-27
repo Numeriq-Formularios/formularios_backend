@@ -58,8 +58,63 @@ class Usuario extends Authenticatable
         return $this->hasOne(Docente::class, 'id'); 
     }
 
+    // ========== MÉTODOS DE ROLES ==========
     
+    /**
+     * Verificar si el usuario es un alumno
+     */
+    public function esAlumno(): bool
+    {
+        return $this->alumno()->exists();
+    }
 
+    /**
+     * Verificar si el usuario es un docente
+     */
+    public function esDocente(): bool
+    {
+        return $this->docente()->exists();
+    }
 
+    /**
+     * Verificar si el usuario es un superusuario
+     * Solo los docentes pueden ser superusuarios
+     */
+    public function esSuperusuario(): bool
+    {
+        return $this->esDocente() && $this->docente->es_superusuario == 1;
+    }
 
+    /**
+     * Obtener el rol principal del usuario
+     */
+    public function getRol(): string
+    {
+        if ($this->esSuperusuario()) {
+            return 'superusuario';
+        }
+        
+        if ($this->esDocente()) {
+            return 'docente';
+        }
+        
+        if ($this->esAlumno()) {
+            return 'alumno';
+        }
+        
+        return 'sin_rol';
+    }
+
+    /**
+     * Verificar si el usuario tiene un rol específico
+     */
+    public function tieneRol(string $rol): bool
+    {
+        return match($rol) {
+            'alumno' => $this->esAlumno(),
+            'docente' => $this->esDocente(),
+            'superusuario' => $this->esSuperusuario(),
+            default => false
+        };
+    }
 }

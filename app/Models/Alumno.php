@@ -19,6 +19,7 @@ class Alumno extends Model
 
     protected $fillable = [
         'escolaridad',
+        'estado',
     ];
     
     protected $primaryKey = 'id'; // Definir la clave primaria
