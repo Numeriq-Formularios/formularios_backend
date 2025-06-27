@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void {
         Schema::create('docentes', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('id')->primary();
             $table->string('titulo_profesional', 50);
             $table->string('linkedin', 50)->nullable();
             $table->boolean('es_superusuario')->default(false);

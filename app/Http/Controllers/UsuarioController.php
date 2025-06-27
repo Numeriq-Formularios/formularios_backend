@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Usuario;
 use App\Models\Alumno;
+use App\Models\Docente;
 use GuzzleHttp\Psr7\Message;
 
 class UsuarioController extends Controller
@@ -13,14 +14,14 @@ class UsuarioController extends Controller
 
     //login y logout no estan implementados en este controlador, ya que se usan los de sanctum, yo quiero usar los mios 
 
-    public function register(Request $request)
+    public function registerAlumno(Request $request)
     {
         //Recopilo los del formulario de registro  
         $data = $request->validate([
             'nombre' => 'required|string|max:255',
             'correo' => 'required|string|email|max:255|unique:usuarios',
             'clave' => 'required|string|min:8',
-            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         //Se crea una instancia del modelo Usuario
@@ -76,6 +77,80 @@ class UsuarioController extends Controller
     }
 
 
+
+    public function registerDocente(Request $request)
+    {
+        //Recopilo los del formulario de registro  
+        $data = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'correo' => 'required|string|email|max:255|unique:usuarios',
+            'clave' => 'required|string|min:8',
+            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'titulo_profesional'=> 'required|string|max:255',
+            'linkedin'=>'required|string|max:255',
+            'es_superusuario'=>'nullable|in:true,false,1,0,"1","0"',
+
+        ]);
+
+        //Se crea una instancia del modelo Usuario
+        $usuario = new Usuario();
+        $usuario->nombre = $data['nombre'];
+        $usuario->correo = $data['correo'];
+        $usuario->clave = bcrypt($data['clave']); // Encriptar la contraseña
+        $usuario->estado = true;
+        $usuario->save();
+
+
+        if ($request->hasfile('foto_perfil')) {
+
+            $image = $data['foto_perfil'];
+
+            //Extraer la extension de la imagen
+            $extensionImage = $image->getClientOriginalExtension();
+
+
+            //Nombre que tendra cada imagen
+            $imagename = "UserImage_" . $usuario->id . "id" . "." . $extensionImage;
+
+            //Se guarda la imagen con el id del usuario
+            $path = $image->storeAs("images/", $imagename, 'public');
+
+            //Se gurda la ruta en completa en la base de datos 
+            $usuario->foto_perfil = asset("storage/images/{$imagename}");
+        } else {
+            //Se gurda la ruta en completa en la base de datos 
+            $usuario->foto_perfil = asset("storage/images/user-default-Image.svg");
+        }
+
+        $usuario->save();
+
+        //Aqui es importante manejar la logica si el usuario es alumno o es docente.
+        //En este caso, vamos a suponer que el usuario es un alumno por defecto.
+    $esSuper = filter_var($data['es_superusuario'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+        $docente = new Docente();
+        $docente->id = $usuario->id;
+        $docente->titulo_profesional = $data['titulo_profesional']; 
+        $docente->linkedin = $data['linkedin'];
+        $docente->es_superusuario= $esSuper ? 1 : 0;
+
+        $docente->save();
+    
+
+
+        //Se genera el token de acceso para el usuario recién registrado
+        $token = $usuario->createToken('auth_token')->plainTextToken;
+
+        // Retornar una respuesta adecuada
+        return response()->json([
+            'message' => 'Usuario registrado correctamente',
+            'usuario' => $usuario,
+            'docente' =>$docente,
+            'token' => $token
+        ], 201);
+    }
+
+
     public function showAll()
     {
 
@@ -92,6 +167,8 @@ class UsuarioController extends Controller
 
         $usuario = Usuario::find($id)->Where('estado', true)->first();
 
+        //Si ese usuario es alumno o si es docente. Mostrarle sus datos 
+
         if (!$usuario) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
@@ -105,7 +182,6 @@ class UsuarioController extends Controller
     public function update(Request $request, $id)
     {
 
-        
 
         //Primero recibo los datos  
         $data = $request->validate([
