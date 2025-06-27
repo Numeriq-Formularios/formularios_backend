@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void {
         Schema::create('preguntas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('docente_id')->constrained('docentes')->onDelete('cascade');
-            $table->foreignId('tema_id')->constrained('temas')->onDelete('cascade');
-            $table->foreignId('nivel_bloom_id')->constrained('nivel_blooms')->onDelete('cascade');
-            $table->foreignId('dificultad_id')->constrained('dificultades')->onDelete('cascade');
-            $table->foreignId('tipo_pregunta_id')->constrained('tipo_preguntas')->onDelete('cascade');
+            $table->foreignId('id_docente')->constrained('docentes')->onDelete('cascade');
+            $table->foreignId('id_tema')->constrained('temas')->onDelete('cascade');
+            $table->foreignId('id_nivel_bloom')->constrained('nivel_blooms')->onDelete('cascade');
+            $table->foreignId('id_dificultad')->constrained('dificultades')->onDelete('cascade');
+            $table->foreignId('id_tipo_pregunta')->constrained('tipo_preguntas')->onDelete('cascade');
             $table->text('texto_pregunta');
             $table->text('explicacion')->nullable();
             $table->boolean('estado')->default(true);

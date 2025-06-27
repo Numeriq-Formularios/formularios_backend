@@ -7,6 +7,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsuarioController;
 
 
+
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/singup', [UsuarioController::class, 'register']);
 
@@ -31,6 +33,7 @@ Route::delete('/usuario/{id}', [UsuarioController::class, 'destroy']); //Elimina
 
 Route::get('/usuarios/alumnos/',[AlumnoController::class, 'showAll']); //Mostrar todos los usuarios que son alumnos
 //Mostarr el usuario que este enlazado a un alumno
+
 
 
 
