@@ -17,6 +17,7 @@ class AlumnoController extends Controller
             'clave' => 'required|string|min:8',
             'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'escolaridad' => 'required|string|max:255',
+            'estado' => 'nullable|boolean', // Este campo puede ser opcional
         ]);
 
         //Se crea una instancia del modelo Usuario
