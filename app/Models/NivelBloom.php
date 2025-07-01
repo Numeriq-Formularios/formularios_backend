@@ -8,7 +8,7 @@ use App\Models\Pregunta;
 class NivelBloom extends Model
 {
 
-    protected $table = 'nivel_bloom';
+    protected $table = 'nivel_blooms';
 
  protected $fillable = [
         'nombre',

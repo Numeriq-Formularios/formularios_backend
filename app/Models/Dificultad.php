@@ -7,7 +7,7 @@ use App\Models\Pregunta;
 
 class Dificultad extends Model
 {
-    protected $table = 'dificultad';
+    protected $table = 'dificultades';
 
     // Definimos los campos que se pueden llenar
     protected $fillable = [

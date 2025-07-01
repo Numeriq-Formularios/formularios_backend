@@ -9,7 +9,7 @@ use App\Models\ResultadoPreguntaActividadExamen;
 
 class OpcionRespuesta extends Model
 {
-    protected $table = 'opcion_respuesta';
+    protected $table = 'opcion_respuestas';
 
     // Definimos los campos que se pueden llenar
 

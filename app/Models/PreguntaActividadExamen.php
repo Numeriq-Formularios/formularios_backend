@@ -8,7 +8,7 @@ use App\Models\Pregunta;
 
 class PreguntaActividadExamen extends Pivot
 {
-    protected $table = 'pregunta_actividad_examen';
+    protected $table = 'pregunta_actividad_examenes';
 
     // Definimos los campos que se pueden llenar
  protected $fillable = [

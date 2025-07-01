@@ -14,7 +14,7 @@ use App\Models\PreguntaActividadExamen;
 
 class ActividadExamen extends Model
 {
-    protected $table = 'actividad_examen';
+    protected $table = 'actividad_examenes';
 
     // Definición de los campos que se pueden asignar masivamente
    protected $fillable = [

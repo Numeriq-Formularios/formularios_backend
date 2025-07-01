@@ -7,7 +7,7 @@ use App\Models\Pregunta;
 
 class TipoPregunta extends Model
 {
-    protected $table = 'tipo_pregunta';
+    protected $table = 'tipo_preguntas';
 
     protected $fillable = [
         'tipo',
