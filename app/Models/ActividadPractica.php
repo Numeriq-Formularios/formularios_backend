@@ -15,6 +15,8 @@ class ActividadPractica extends Model
     protected $table = 'actividad_practica';
 
     protected $fillable = [
+        'id_curso',
+        'id_docente',
         'nombre',
         'descripcion',
         'cantidad_reactivos',

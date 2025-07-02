@@ -13,6 +13,9 @@ class ResultadoPreguntaActividadPractica extends Model
     protected $table = 'resultado_pregunta_actividad_practica';
 
     protected $fillable = [
+        'id_intento',
+        'id_pregunta',
+        'id_opcion_res',
         'respuesta_texto',
         'es_correcta',
         'puntaje_obtenido',
@@ -27,7 +30,7 @@ class ResultadoPreguntaActividadPractica extends Model
 
     public function opcionRespuesta()
     {
-        return $this->belongsTo(OpcionRespuesta::class, 'id_opcion_seleccionada');
+        return $this->belongsTo(OpcionRespuesta::class, 'id_opcion_res');
     }
 
     public function pregunta()

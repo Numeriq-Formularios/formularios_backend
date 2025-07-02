@@ -12,6 +12,9 @@ class ResultadoPreguntaActividadExamen extends Model
     protected $table = 'resultado_pregunta_actividad_examen';
 
     protected $fillable = [
+        'id_intento',
+        'id_opcion_res',
+        'id_pregunta',
         'respuesta_texto',
         'es_correcta',
         'puntaje_obtenido',

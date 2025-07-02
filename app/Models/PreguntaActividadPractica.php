@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use App\Models\ActividadPractica;
@@ -12,9 +13,10 @@ class PreguntaActividadPractica extends Pivot
     protected $table = 'pregunta_actividad_practica';
 
     protected $fillable = [
-        'id_actividad_examen',
+        'id_practica',
         'id_pregunta',
         'orden',
+        'estado'
     ];
 
     public function actividad_practica()

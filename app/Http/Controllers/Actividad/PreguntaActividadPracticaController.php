@@ -26,9 +26,10 @@ class PreguntaActividadPracticaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'id_actividad_practica' => 'required|exists:actividad_practica,id',
+            'id_practica' => 'required|exists:actividad_practica,id',
             'id_pregunta' => 'required|exists:preguntas,id',
             'orden' => 'nullable|integer',
+            'estado' => 'nullable|boolean',
         ]);
         $pregunta = PreguntaActividadPractica::create($data);
         return response()->json(['pregunta' => $pregunta], 201);

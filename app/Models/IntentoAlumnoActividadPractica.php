@@ -11,6 +11,8 @@ class IntentoAlumnoActividadPractica extends Model
     protected $table = 'intento_alumno_actividad_practica';
 
     protected $fillable = [
+        'id_alumno',
+        'id_actividad_practica',
         'fecha_inicio',
         'fecha_fin',
         'puntaje_total',
