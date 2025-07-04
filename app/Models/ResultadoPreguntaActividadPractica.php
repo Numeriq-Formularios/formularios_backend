@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use APP\Models\IntentoAlumnoActividadPractica;
+use App\Models\IntentoAlumnoActividadPractica;
 use App\Models\OpcionRespuesta;
 use App\Models\Pregunta;
 
