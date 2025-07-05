@@ -27,7 +27,7 @@ class DocenteController extends Controller
         $usuario->nombre = $data['nombre'];
         $usuario->correo = $data['correo'];
         $usuario->clave = bcrypt($data['clave']); // Encriptar la contraseña
-        $usuario->estado = true;
+        $usuario->estado = true;// Por defecto, el usuario está activo
         $usuario->save();
 
 
@@ -124,8 +124,8 @@ class DocenteController extends Controller
             'correo' => 'nullable|string|email|max:255|unique:usuarios,correo,' . $id,
             'clave' => 'nullable|string|min:8',
             'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'titulo_profesional' => 'required|string|max:255',
-            'linkedin' => 'required|string|max:255',
+            'titulo_profesional' => 'nullable|string|max:255',
+            'linkedin' => 'nullable|string|max:255',
             'es_superusuario' => 'nullable|in:true,false,1,0,"1","0"',
         ]);
 
@@ -217,9 +217,13 @@ class DocenteController extends Controller
         $usuario->estado = false;
         $usuario->save();
 
+        //Eliminar el docente asociado
+        $usuario->docente->estado = false; // Cambiar el estado del docente a inactivo
+        $usuario->docente->save();
+
         return response()->json([
             'message' => 'Usuario eliminado correctamente',
-            'usuario' => $usuario->docente,
+            'usuario' => $usuario,
         ], 200);
     }
 

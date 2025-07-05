@@ -5,7 +5,7 @@ use App\Http\Controllers\Actividad\PreguntaActividadPracticaController;
 use App\Http\Controllers\Intento\IntentoExamenController;
 use App\Http\Controllers\Intento\IntentoPracticaController;
 use App\Http\Controllers\Intento\ResultadoExamenController;
-use App\Http\Controllers\Intento\ResultadoPracticaController;
+use App\Http\Controllers\Intento\ResultadoPracticaController;       
 
 use App\Http\Controllers\AlumnoController;
 use Illuminate\Http\Request;
@@ -53,6 +53,7 @@ Route::get('/usuario/docente/{id}', [DocenteController::class, 'show']);
 Route::post('/usuario/docente/{id}', [DocenteController::class, 'update']); //Actualizar un registro, utilizamos post porque en postman no permite subir imagenes
 Route::delete('/usuario/docente/{id}', [DocenteController::class, 'destroy']);
 
+//Rutas para cursos
 
 
 
@@ -60,6 +61,8 @@ Route::delete('/usuario/docente/{id}', [DocenteController::class, 'destroy']);
 
 //Ruta para hacver logout
 Route::post('/logout',[AuthController::class, 'logout']);
+
+
 
 // RUTAS PARA ACTIVIDAD PRACTICA
 Route::get('/actividades/practicas', [ActividadPracticaController::class, 'index']);//Si funciona
@@ -103,6 +106,7 @@ Route::post('/resultado/examen', [ResultadoExamenController::class, 'store']);//
 Route::post('/resultado/examen/{id}', [ResultadoExamenController::class, 'update']);// Si funciona
 Route::delete('/resultado/examen/{id}', [ResultadoExamenController::class, 'destroy']);// Si funciona
 
+<<<<<<< HEAD
 // Rutas para Actividad Examen
 Route::get('/actividad-examenes', [ActividadExamenController::class, 'index']);
 Route::post('/actividad-examenes', [ActividadExamenController::class, 'store']);
@@ -165,5 +169,8 @@ Route::post('/opcion-respuestas', [OpcionRespuestaController::class, 'store']);
 Route::get('/opcion-respuestas/{id}', [OpcionRespuestaController::class, 'show']);
 Route::put('/opcion-respuestas/{id}', [OpcionRespuestaController::class, 'update']);
 Route::delete('/opcion-respuestas/{id}', [OpcionRespuestaController::class, 'destroy']);
+=======
+
+>>>>>>> 486b479 (Cambios en el controlador de Alumno y Docente)
 
 });

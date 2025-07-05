@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\Models\Alumno; // Assuming you have an Alumno model
-use App\Models\Usuario; // Assuming you have a Usuario model
+use Illuminate\Http\Request; //Objeto Request para manejar las peticiones HTTP
+use App\Models\Alumno; //Modelo de Alumno
+use App\Models\Usuario; //Modelo de Usuario
+use Illuminate\Http\JsonResponse;  // Para manejar las respuestas JSON
+use function Laravel\Prompts\error;
 
 class AlumnoController extends Controller
 {
@@ -17,15 +18,16 @@ class AlumnoController extends Controller
             'clave' => 'required|string|min:8',
             'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'escolaridad' => 'required|string|max:255',
-            'estado' => 'nullable|boolean', // Este campo puede ser opcional
         ]);
+
 
         //Se crea una instancia del modelo Usuario
         $usuario = new Usuario();
         $usuario->nombre = $data['nombre'];
         $usuario->correo = $data['correo'];
         $usuario->clave = bcrypt($data['clave']); // Encriptar la contraseña
-        $usuario->estado = true;
+        // Si el estado no se proporciona, se establece como true por defecto
+        $usuario->estado = true; // Por defecto, el usuario está activo
         $usuario->save();
 
 
@@ -58,6 +60,7 @@ class AlumnoController extends Controller
         $alumno = new Alumno();
         $alumno->id = $usuario->id;
         $alumno->escolaridad = $data["escolaridad"]; // Valor por defecto, se puede cambiar según la lógica de tu aplicación
+        $alumno->estado = true; // Por defecto, el alumno está activo
         $alumno->save();
 
 
@@ -68,6 +71,7 @@ class AlumnoController extends Controller
         return response()->json([
             'message' => 'Usuario registrado correctamente',
             'usuario' => $usuario,
+            'alumno' => $alumno,
             'token' => $token
         ], 201);
     }
@@ -169,6 +173,7 @@ class AlumnoController extends Controller
         if(isset($data['escolaridad'])) {
             // Actualizar la escolaridad del alumno
             $usuario->alumno->escolaridad = $data['escolaridad'];
+            $usuario->alumno->save();
         }
 
         $usuario->save();
@@ -195,11 +200,14 @@ class AlumnoController extends Controller
 
         // Eliminar lógicamente al usuario
         $usuario->estado = false;
-        $usuario->save();
+          $usuario->save();
+        // Eliminar lógicamente al alumno asociado
+        $usuario->alumno->estado = false;
+        $usuario->alumno->save();
 
         return response()->json([
             'message' => 'Usuario eliminado correctamente',
-            'usuario' => $usuario
+            'usuario' => $usuario,
         ], 200);
     }
 
