@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Middleware\EnsureTokenIsValid;
+
+use App\Http\Middleware\EnsureUserIsAlumno;
+use App\Http\Middleware\EnsureUserIsDocente;
+use App\Http\Middleware\EnsureUserIsSuperusuario;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,8 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
          
     )
     ->withMiddleware(function (Middleware $middleware) {
-       // $middleware->append(EnsureIsDocente::class);
-       // $middleware->append(EnsureTokenIsAlumno::class);
+       $middleware->alias([
+      'rol.alumno'=> EnsureUserIsAlumno::class,
+      'rol.docente'=> EnsureUserIsDocente::class,
+      'rol.superusuario'=> EnsureUserIsSuperusuario::class,
+       ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -228,5 +228,114 @@ class DocenteController extends Controller
     }
 
 
+    public function meUser(Request $request)
+    {
+
+        $usuario = $request->user(); // Obtener el usuario autenticado
+
+
+        if (!$usuario) {
+            return response()->json([
+                'message' => 'Usuario no autenticado',
+            ], 401);
+        }
+
+        //Aqui busco el usuairo y su alumno asociado
+        $usuario = Usuario::where('id', $usuario->id)
+            ->where('estado', true) // Asegurarse de que el usuario esté activo
+            ->has('docente') // Asegurarse de que el usuario tenga un docente asociado
+            ->with('docente') // Incluir los datos del docente
+            ->first();
+
+
+        return response()->json([
+            'usuario' => $usuario
+        ], 200);
+    }
+
+
+
+
+    public function updateMe(Request $request)
+    {
+
+
+        $usuario = $request->user(); // Obtener el usuario autenticado
+
+
+        //Recibo los datos
+        $data = $request->validate([
+            'nombre' => 'nullable|string|max:255',
+            'correo' => 'nullable|string|email|max:255|unique:usuarios,correo,',
+            'clave' => 'nullable|string|min:8',
+            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'titulo_profesional' => 'nullable|string|max:255',
+            'linkedin' => 'nullable|string|max:255',
+            'es_superusuario' => 'nullable|in:true,false,1,0,"1","0"',
+        ]);
+
+        if (!$usuario) {
+            return response()->json([
+                "message" => "El usuario no existe",
+            ], 404);
+        }
+
+
+        //El punto aqui es decir si recibes dato de un campo lo pones y guardas
+
+        if (isset($data['nombre'])) {
+            $usuario->nombre = $data['nombre'];
+        }
+
+        if (isset($data['correo'])) {
+            $usuario->correo = $data['correo'];
+        }
+
+        if (isset($data['clave'])) {
+            $usuario->clave = bcrypt($data['clave']);
+        }
+
+        if (isset($data['foto_perfil'])) {
+            $image = $data['foto_perfil'];
+
+            //Extraer la extension de la imagen
+            $extensionImage = $image->getClientOriginalExtension();
+
+
+            //Nombre que tendra cada imagen
+            $imagename = "UserImage_" . $usuario->id . "id" . "." . $extensionImage;
+
+            //Se guarda la imagen con el id del usuario
+            $path = $image->storeAs("images/", $imagename, 'public');
+
+            //Se gurda la ruta en completa en la base de datos 
+            $usuario->foto_perfil = asset("storage/images/{$imagename}");
+        }
+
+        if(isset($data['titulo_profesional'])) {
+            // Actualizar el titulo profesional del docente
+            $usuario->docente->titulo_profesional = $data['titulo_profesional'];
+        }
+
+        if(isset($data['linkedin'])) {
+            // Actualizar el linkedin del docente
+            $usuario->docente->linkedin = $data['linkedin'];
+        }
+
+        if(isset($data['es_superusuario'])) {
+            // Actualizar si es superusuario
+            $usuario->docente->es_superusuario = filter_var($data['es_superusuario'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        }
+
+        $usuario->save();
+
+
+        return response()->json([
+            "message" => "Usuario actualizado correctamente",
+            "usuario" => $usuario,
+        ]);
+    }
+
+
 
 }

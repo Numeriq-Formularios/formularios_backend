@@ -12,8 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DocenteController;
-use App\Http\Controllers\UsuarioController;
-use App\Http\Middleware\EnsureTokenIsValid;
 use App\Http\Controllers\ActividadExamenController;
 use App\Http\Controllers\NivelBloomController;
 use App\Http\Controllers\AsignaturaController;
@@ -28,12 +26,30 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/singup/usuario/alumno', [AlumnoController::class, 'register']);
 
 
+//Aqui van todas las funciones del usuario Alumno
+Route::middleware(['auth:sanctum', 'rol.alumno'])->group(function () {
+    Route::get('/usuario/alumno', [AlumnoController::class, 'meUser']);
+    Route::post('/usuario/alumno', [AlumnoController::class, 'updateMe']);
 
-//Grupo de rutas autenticadas con Sanctum, solo usuarios autenticados pueden acceder
-// Esto es para que no se pueda acceder a las rutas de usuario sin estar autenticado
-Route::middleware('auth:sanctum')->group(function () {
+//Route::post('/usuario/alumno/curso/{id}', [AlumnoController::class, 'incribirCurso']); // Aqui esta la posibilidad en inscribir un alumno a un curso
+//Route::get('/usuario/alumno/cursos', [AlumnoController::class, 'misCursos']); 
+
+});
+
+
+
+//Aqui van todas las funciones del usuario Docente
+Route::middleware(['auth:sanctum', 'rol.docente'])->group(function () {
+    Route::get('/usuario/docente', [DocenteController::class, 'meUser']);
+    Route::post('/usuario/docente', [DocenteController::class, 'updateMe']);
+});
+
+
+// Aqui van todas las funciones del usuario superusuario que debe de ser docente
+Route::middleware(['auth:sanctum', 'rol.superusuario'])->group(function () {
 
 Route::post('/singup/usuario/docente', [DocenteController::class, 'register']);
+
 
 //Rutas del usuario que es Alumno
 //Tienen el middleware para  restringir el acceso a quien no tenga el permiso para acceder a el recurso
@@ -41,25 +57,30 @@ Route::get('/usuarios/alumnos', [AlumnoController::class, 'index']); //Mostrar v
 Route::get('/usuario/alumno/{id}', [AlumnoController::class, 'show']); //Mostar un alumno en concreto
 Route::post('/usuario/alumno/{id}', [AlumnoController::class, 'update']); //Actualizar un registro, utilizamos post porque en postman no permite subir imagenes
 Route::delete('/usuario/alumno/{id}', [AlumnoController::class, 'destroy']); //Eliminado logico en el id del usuario
-//Route::post('/usuario/alumno/curso/{id}', [AlumnoController::class, 'incribirCurso']);
+//Route::post('/usuario/alumno/curso/{id}', [AlumnoController::class, 'incribirCurso']); // Aqui esta la posibilidad en inscribir un alumno a un curso
 //Route::get('/usuario/alumno/{id}/curso', [AlumnoController::class, 'misCursos']); 
 
 
-
-//Rutas del usuario que es Docente
-//Tienen el middleware para  restringir el acceso a quien no tenga el permiso para acceder a el recurso
 Route::get('/usuarios/docentes/', [DocenteController::class, 'index']); 
 Route::get('/usuario/docente/{id}', [DocenteController::class, 'show']); 
 Route::post('/usuario/docente/{id}', [DocenteController::class, 'update']); //Actualizar un registro, utilizamos post porque en postman no permite subir imagenes
 Route::delete('/usuario/docente/{id}', [DocenteController::class, 'destroy']);
 
-//Rutas para cursos
+
+});
+
+
+//Grupo de rutas autenticadas con Sanctum, solo usuarios autenticados pueden acceder
+// Esto es para que no se pueda acceder a las rutas de usuario sin estar autenticado
+Route::middleware('auth:sanctum')->group(function () {
 
 
 
 
 
-//Ruta para hacver logout
+
+
+//Ruta para hacer logout
 Route::post('/logout',[AuthController::class, 'logout']);
 
 
