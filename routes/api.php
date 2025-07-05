@@ -106,7 +106,6 @@ Route::post('/resultado/examen', [ResultadoExamenController::class, 'store']);//
 Route::post('/resultado/examen/{id}', [ResultadoExamenController::class, 'update']);// Si funciona
 Route::delete('/resultado/examen/{id}', [ResultadoExamenController::class, 'destroy']);// Si funciona
 
-<<<<<<< HEAD
 // Rutas para Actividad Examen
 Route::get('/actividad-examenes', [ActividadExamenController::class, 'index']);
 Route::post('/actividad-examenes', [ActividadExamenController::class, 'store']);
@@ -169,8 +168,6 @@ Route::post('/opcion-respuestas', [OpcionRespuestaController::class, 'store']);
 Route::get('/opcion-respuestas/{id}', [OpcionRespuestaController::class, 'show']);
 Route::put('/opcion-respuestas/{id}', [OpcionRespuestaController::class, 'update']);
 Route::delete('/opcion-respuestas/{id}', [OpcionRespuestaController::class, 'destroy']);
-=======
 
->>>>>>> 486b479 (Cambios en el controlador de Alumno y Docente)
 
 });
