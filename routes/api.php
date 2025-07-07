@@ -15,12 +15,14 @@ use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\ActividadExamenController;
 use App\Http\Controllers\NivelBloomController;
 use App\Http\Controllers\AsignaturaController;
+use App\Http\Controllers\CursoController;
 use App\Http\Controllers\TemaController;
 use App\Http\Controllers\PreguntaController;
 use App\Http\Controllers\DificultadController;
 use App\Http\Controllers\TipoPreguntaController;
 use App\Http\Controllers\PreguntaActividadExamenController;
 use App\Http\Controllers\OpcionRespuestaController;
+use App\Models\Curso;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/singup/usuario/alumno', [AlumnoController::class, 'register']);
@@ -30,9 +32,9 @@ Route::post('/singup/usuario/alumno', [AlumnoController::class, 'register']);
 Route::middleware(['auth:sanctum', 'rol.alumno'])->group(function () {
     Route::get('/usuario/alumno', [AlumnoController::class, 'meUser']);
     Route::post('/usuario/alumno', [AlumnoController::class, 'updateMe']);
-
-//Route::post('/usuario/alumno/curso/{id}', [AlumnoController::class, 'incribirCurso']); // Aqui esta la posibilidad en inscribir un alumno a un curso
-//Route::get('/usuario/alumno/cursos', [AlumnoController::class, 'misCursos']); 
+    Route::post('/usuario/alumno/curso/{id}', [AlumnoController::class, 'incribirCurso']); // Aqui esta la posibilidad en inscribir un alumno a un curso
+    Route::get('/usuario/alumno/cursos', [AlumnoController::class, 'misCursos']); //Los cusos a los que esta inscrito el alumno 
+    
 
 });
 
@@ -42,6 +44,9 @@ Route::middleware(['auth:sanctum', 'rol.alumno'])->group(function () {
 Route::middleware(['auth:sanctum', 'rol.docente'])->group(function () {
     Route::get('/usuario/docente', [DocenteController::class, 'meUser']);
     Route::post('/usuario/docente', [DocenteController::class, 'updateMe']);
+
+
+
 });
 
 
@@ -75,9 +80,12 @@ Route::delete('/usuario/docente/{id}', [DocenteController::class, 'destroy']);
 Route::middleware('auth:sanctum')->group(function () {
 
 
-
-
-
+//Ruta para cursos
+Route::get('/cursos', [CursoController::class, 'index']); //Lista de cursos
+Route::post('/curso', [CursoController::class, 'store']); //Creacion de un curso
+Route::get('/curso/{id}', [CursoController::class, 'show']); //Muestra un curso en especifico
+Route::put('/curso/{id}', [CursoController::class, 'update']); //Actualiza un curso en especifico
+Route::delete('/curso/{id}', [CursoController::class, 'destroy']); //Elimina un curso en especifico
 
 
 //Ruta para hacer logout

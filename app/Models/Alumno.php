@@ -34,7 +34,7 @@ class Alumno extends Model
     // Alumno con la relacion de curso alumno n : n 
     public function cursos(): BelongsToMany
     {
-        return $this->belongsToMany(Curso::class, 'curso_alumnos', 'id_alumno', 'id_curso')->using(CursoAlumno::class)->withPivot('calificacion', 'estado', 'fecha_inscripcion')->withTimestamps();
+        return $this->belongsToMany(Curso::class, 'cursos_alumnos', 'id_alumno', 'id_curso')->using(CursoAlumno::class)->withPivot('calificacion', 'estado', 'fecha_inscripcion')->withTimestamps();
 
     }
 

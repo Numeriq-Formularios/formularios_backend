@@ -9,14 +9,14 @@ use App\Models\Alumno;
 
 class CursoAlumno extends Pivot
 {
-    protected $table = 'curso_alumnos';
+    protected $table = 'cursos_alumnos';
 
     protected $fillable = [
         'id_curso',
         'id_alumno',
         //Aqui la idea seria generar la calificacion del alumno en el curso
         'calificacion',
-        'estado', // Puede ser 'activo', 'inactivo', etc.
+        'estado', // Puede ser 'TRUE==1', 'FALSE ==0 ', etc.
         'fecha_inscripcion', // Fecha en que el alumno se inscribió al curso
     ];
 

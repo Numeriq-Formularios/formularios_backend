@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request; //Objeto Request para manejar las peticiones HTTP
 use App\Models\Alumno; //Modelo de Alumno
 use App\Models\Usuario; //Modelo de Usuario
+use App\Models\CursoAlumno;
+use App\Models\Curso; //Modelo de Curso
+
 use Illuminate\Http\JsonResponse;  // Para manejar las respuestas JSON
 use function Laravel\Prompts\error;
 
@@ -315,12 +318,102 @@ class AlumnoController extends Controller
 
 
 
-    public function incribirCurso() {}
+    public function incribirCurso(Request $request, $id)
+    {
+
+        //Me traigo el usuario autenticado
+        $usuario = $request->user();
+
+        if (!$usuario || !$usuario->alumno) {
+            return response()->json([
+                'message' => 'Usuario no autenticado o no es un alumno activo',
+            ], 401);
+        }
+
+                //Obtener el id del usuario autenticado que es alumno
+        $idUsuarioAlumno = $usuario->alumno->id; // Asumiendo que el
+
+        //Verificar si el usuario autenticado es un alumno y esta activo
+        $alumno = Alumno::where('id', $idUsuarioAlumno)->where('estado', true)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'message' => 'Usuario no es un alumno activo',
+            ], 403);
+        }
+
+        //Busco el curso por id al que se inscribira el alumno
+        $curso = Curso::where('id', $id)->where('estado', true)->first();
+
+        if (!$curso) {
+            return response()->json([
+                'message' => 'Curso no encontrado o no disponible',
+            ], 404);
+        }
+
+        //Verificar si ya esta inscrito en el curso 
+        $inscrito = CursoAlumno::where('id_alumno', $idUsuarioAlumno) // Usar el id del alumno
+            ->where('id_curso', $id)
+            ->where('estado', true) // Solo considerar inscripciones activas
+            ->first();
+
+        if ($inscrito) {
+            return response()->json([
+                'message' => 'Ya estás inscrito en este curso',
+            ], 400);
+        }
 
 
-    public function misCursos() {}
+        //Aqui creo mi objeto CursoAlumno
+        $cursoAlumno = new CursoAlumno();
+        $cursoAlumno->id_alumno = $idUsuarioAlumno; // Asignar el id del usuario autenticado
+        $cursoAlumno->id_curso = $id; // Asignar el id del curso al que se inscribe
+        $cursoAlumno->estado = true; //
+        $cursoAlumno->calificacion = null;
+        $cursoAlumno->fecha_inscripcion = now()->format("Y-m-d"); // Fecha de inscripción actual
+        $cursoAlumno->save();
 
-    public function intentoActividadExamen() {}
+        return response()->json([
+            'message' => 'Inscripción exitosa al curso',
+            'curso_alumno' => $cursoAlumno,
+            'alumno' => $alumno,
+        ]);
+    }
 
-    public function intentoActividadPractica() {}
+
+    public function misCursos()
+    {
+        //Me traigo el usuario autenticado
+        $usuario = request()->user();
+
+        $idUsuarioAlumno = $usuario->alumno->id; // Asumiendo que el usuario tiene un alumno asociado
+
+        if (!$usuario || !$usuario->alumno) {
+            return response()->json([
+                'message' => 'Usuario no autenticado o no es alumno',
+            ], 401);
+        }
+
+        //Obtener el id del usuario auten
+
+        //Buscar los cursos usando el NOMBRE DE LA RELACIÓN (no de la tabla)
+        $cursos = Curso::whereHas('alumnos', function ($query) use ($idUsuarioAlumno) {
+            $query->where('cursos_alumnos.id_alumno', $idUsuarioAlumno)
+                ->where('cursos_alumnos.estado', true); // Solo inscripciones activas
+        })
+            ->where('estado', true)->get();
+
+        return response()->json([
+            'cursos' => $cursos,
+        ], 200);
+    }
+
+    // Métodos para manejar las actividades del alumno
+    public function intentoActividadExamen() {
+
+    }
+
+    public function intentoActividadPractica() {
+
+    }
 }

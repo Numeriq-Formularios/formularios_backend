@@ -19,6 +19,8 @@ class Curso extends Model
     protected $table = 'cursos';
 
     protected $fillable = [
+        'id_docente',
+        'id_asignatura',
         'nombre',
         'descripcion',
         'imagen',
@@ -31,7 +33,7 @@ class Curso extends Model
     //Relacion de curso con cursos_alumno n: n 
     public function alumnos(): BelongsToMany
     {
-        return $this->belongsToMany(Alumno::class, 'curso_alumnos', 'id_curso', 'id_alumno')->using(CursoAlumno::class)->withPivot('calificacion', 'estado', 'fecha_inscripcion')->withTimestamps();
+        return $this->belongsToMany(Alumno::class, 'cursos_alumnos', 'id_curso', 'id_alumno')->using(CursoAlumno::class)->withPivot('calificacion', 'estado', 'fecha_inscripcion')->withTimestamps();
     }
 
     //Relaciones de curso de n : 1 con docente 
@@ -41,7 +43,7 @@ class Curso extends Model
     }
 
     //Relacion de curso con asignatura el punto es que sea de una asignatura a 1 curso 
-    public function asignatura(): BelongsTo
+    public function asignaturas(): BelongsTo
     {
         return $this->belongsTo(Asignatura::class, 'id_asignatura');
     }
