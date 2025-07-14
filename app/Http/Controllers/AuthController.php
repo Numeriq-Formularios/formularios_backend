@@ -10,25 +10,17 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-
     //En este controlador se autentifica, y se cierra la sesion de los usuarios.
-
-    //login y logout no estan implementados en este controlador, ya que se usan los de sanctum, yo quiero usar los mios 
-
-
     public function login (Request $request ){
 
+        //Validar que los campos correo y clave esten presentes
+        //Si no estan presentes, se retorna un error en el cual se indica que son requeridos
         $data = $request->validate([
             'correo' => 'required|string|email|max:255',
             'clave' => 'required|string|min:8|max:255',
         ]);
-        //Validar que los campos correo y clave esten presentes
-        //Si no estan presentes, se retorna un error 400 Bad Request
 
-        if(!isset($data['correo']) || !isset($data['clave'])) {
-            return response()->json(['message' => 'Correo y clave son requeridos'], 400);
-        }
-
+        //Se busca el usario por correo y  verificando que el estado sea activo == 1
         $usuario = Usuario::where('correo', $data['correo'])->where('estado', true)->first();
 
         if(!$usuario || !Hash::check($data['clave'], $usuario->clave)) {
@@ -41,11 +33,8 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Usuario autenticado correctamente',
             'usuario' => $usuario,
-            'token' => $token
+            'token' => $token,
         ], 200);
-
-
-
     }
 
 
@@ -59,9 +48,6 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Sesion cerrada correctamente',
         ], 200);
-
-
-        
 
     }
 

@@ -45,7 +45,7 @@ class Docente extends Model
 
         public function especializaciones(): BelongsToMany
     {
-        return $this->belongsToMany(Especializacion::class, 'docente_especializaciones', 'id_docente', 'id_especializacion');
+        return $this->belongsToMany(Especializacion::class, 'docente_especializaciones', 'id_docente', 'id_especializacion')->withTimestamps();
 
     }
 

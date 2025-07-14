@@ -7,12 +7,15 @@ use App\Models\Alumno; //Modelo de Alumno
 use App\Models\Usuario; //Modelo de Usuario
 use App\Models\CursoAlumno;
 use App\Models\Curso; //Modelo de Curso
-
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;  // Para manejar las respuestas JSON
 use function Laravel\Prompts\error;
 
 class AlumnoController extends Controller
 {
+    use AuthorizesRequests, ValidatesRequests;
+
     public function register(Request $request)
     {
         //Recopilo los del formulario de registro  
@@ -81,32 +84,49 @@ class AlumnoController extends Controller
     }
 
 
+    //Funcion que retorna todos los usuarios que son alumnos
     public function index()
     {
-        // Usuarios que tienen relación con alumno y están activos
+        $this->authorize('viewAny', Alumno::class);
+        
+
         $usuarios = Usuario::where('estado', true)
-            ->has('alumno')  // Solo usuarios que tienen alumno
+            ->whereHas('alumno', function ($query) {
+                $query->where('estado', true); // Solo alumnos activos
+            })
             ->with('alumno') // Incluir datos del alumno
             ->get();
+
+        if ($usuarios->isempty()) {
+            return response()->json([
+                'message' => 'No hay usuarios activos',
+            ], 404);
+        }
 
         return response()->json([
             'usuarios' => $usuarios
         ], 200);
     }
 
+    //Funcion que retorna un usuario por ID
     public function show($id)
     {
+
+        $this->authorize('view', Alumno::class);
         // Buscar usuario por ID que esté activo y sea alumno
         $usuario = Usuario::where('id', $id)
             ->where('estado', true)
-            ->has('alumno')
+            ->whereHas('alumno', function ($query) {
+                $query->where('estado', true); // Solo alumnos activos
+            })
             ->with('alumno') // Incluir datos del alumno
             ->first();
 
-
         if (!$usuario) {
-            return response()->json(['message' => 'Almuno no encontrado'], 404);
+            return response()->json(['message' => 'Alumno no encontrado'], 404);
         }
+    
+
 
         return response()->json([
             'usuario' => $usuario
@@ -118,6 +138,7 @@ class AlumnoController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->authorize('update', Alumno::class);
 
         //Primero recibo los datos  
         $data = $request->validate([
@@ -131,7 +152,9 @@ class AlumnoController extends Controller
         // Buscar usuario por ID que esté activo y sea alumno
         $usuario = Usuario::where('id', $id)
             ->where('estado', true)
-            ->has('alumno')
+            ->whereHas('alumno', function ($query) {
+                $query->where('estado', true); // Solo alumnos activos
+            })
             ->with('alumno') // Incluir datos del alumno
             ->first();
 
@@ -193,14 +216,22 @@ class AlumnoController extends Controller
 
     public function destroy($id)
     {
+
+        $this->authorize('delete', Alumno::class);
+        // Buscar usuario por ID que esté activo y sea alumno
+
+
         // Buscar usuario por ID que esté activo y sea alumno
         $usuario = Usuario::where('id', $id)
             ->where('estado', true)
-            ->has('alumno')
+            ->whereHas('alumno', function ($query) {
+                $query->where('estado', true); // Solo alumnos activos
+            })
+            ->with('alumno') // Incluir datos del alumno
             ->first();
 
         if (!$usuario) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+            return response()->json(['message' => 'Usuario no encontrado o ya esta eliminado'], 404);
         }
 
         // Eliminar lógicamente al usuario
@@ -219,6 +250,7 @@ class AlumnoController extends Controller
 
     public function meUser(Request $request)
     {
+        $this->authorize('meUser', Alumno::class);
 
         $usuario = $request->user(); // Obtener el usuario autenticado
 
@@ -229,12 +261,15 @@ class AlumnoController extends Controller
             ], 401);
         }
 
-        //Aqui busco el usuario y su alumno asociado
+        // Buscar usuario por ID que esté activo y sea alumno
         $usuario = Usuario::where('id', $usuario->id)
-            ->where('estado', true) // Asegurarse de que el usuario esté activo
-            ->has('alumno') // Asegurarse de que el usuario tenga un alumno
-            ->with('alumno') // Incluir los datos del alumno
+            ->where('estado', true)
+            ->whereHas('alumno', function ($query) {
+                $query->where('estado', true); // Solo alumnos activos
+            })
+            ->with('alumno') // Incluir datos del alumno
             ->first();
+
 
 
         return response()->json([
@@ -249,22 +284,37 @@ class AlumnoController extends Controller
 
     public function updateMe(Request $request)
     {
+
+        $this->authorize('updateMe', Alumno::class);
+
         //Me traigo el usuario autenticado
         $usuario = $request->user();
 
         //Primero recibo los datos  
         $data = $request->validate([
             'nombre' => 'nullable|string|max:255',
-            'correo' => 'nullable|string|email|max:255|unique:usuarios,correo,',
+            'correo' => 'nullable|string|email|max:255|unique:usuarios,correo,' . $usuario->id,
             'clave' => 'nullable|string|min:8',
             'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'escolaridad' => 'nullable|string|max:255',
         ]);
 
 
+
+        // Buscar usuario por ID que esté activo y sea alumno
+        $usuario = Usuario::where('id', $usuario->id)
+            ->where('estado', true)
+            ->whereHas('alumno', function ($query) {
+                $query->where('estado', true); // Solo alumnos activos
+            })
+            ->with('alumno') // Incluir datos del alumno
+            ->first();
+
+
+
         if (!$usuario) {
             return response()->json([
-                "message" => "El usuario no existe",
+                "message" => "El usuario no encontrado, o es inactivo",
             ], 404);
         }
 
@@ -316,10 +366,46 @@ class AlumnoController extends Controller
 
 
 
+    public function destroyMe(Request $request)
+    {
+        //Me traigo el usuario autenticado
+        $usuario = $request->user();
+
+        $this->authorize('destroyMe', Alumno::class);
 
 
+        // Buscar usuarioAlumno por ID que esté activo y sea alumno
+        $usuarioAlumno = Usuario::where('id', $usuario->id)
+            ->where('estado', true)
+            ->whereHas('alumno', function ($query) {
+                $query->where('estado', true); // Solo alumnos activos
+            })
+            ->with('alumno') // Incluir datos del alumno
+            ->first();
+
+        if (!$usuarioAlumno) {
+            return response()->json(['message' => 'Usuario no encontrado o ya esta eliminado'], 404);
+        }
+
+        // Eliminar lógicamente al usuario
+        $usuario->estado = false;
+        $usuario->save();
+        // Eliminar lógicamente al alumno asociado
+        $usuario->alumno->estado = false;
+        $usuario->alumno->save();
+
+        return response()->json([
+            'message' => 'Usuario eliminado correctamente',
+            'usuario' => $usuario,
+        ], 200);
+    }
+
+
+
+    //Solo se puede inscribir a un curso el propio alumno
     public function incribirCurso(Request $request, $id)
     {
+        $this->authorize('incribirCurso', Alumno::class);
 
         //Me traigo el usuario autenticado
         $usuario = $request->user();
@@ -330,7 +416,7 @@ class AlumnoController extends Controller
             ], 401);
         }
 
-                //Obtener el id del usuario autenticado que es alumno
+        //Obtener el id del usuario autenticado que es alumno
         $idUsuarioAlumno = $usuario->alumno->id; // Asumiendo que el
 
         //Verificar si el usuario autenticado es un alumno y esta activo
@@ -381,8 +467,11 @@ class AlumnoController extends Controller
     }
 
 
+    //Esta funcion solo esta disponible para los alumnos
     public function misCursos()
     {
+        $this->authorize('misCursos', Alumno::class);
+
         //Me traigo el usuario autenticado
         $usuario = request()->user();
 
@@ -409,11 +498,9 @@ class AlumnoController extends Controller
     }
 
     // Métodos para manejar las actividades del alumno
-    public function intentoActividadExamen() {
+    //Esta funcion solo esta disponible para los alumnos
+    public function intentoActividadExamen() {}
 
-    }
-
-    public function intentoActividadPractica() {
-
-    }
+    //Esta funcion solo esta disponible para los alumnos
+    public function intentoActividadPractica() {}
 }

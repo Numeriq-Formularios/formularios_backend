@@ -35,7 +35,7 @@ class CursoController extends Controller
 
 
 
-    //Funcion para crear un curso
+    //Funcion para crear un curso/ Aqui solo puede crear un curso el docente 
     public function store(Request $request)
     {
 

@@ -63,27 +63,47 @@ class Usuario extends Authenticatable
     /**
      * Verificar si el usuario es un alumno
      */
-    public function esAlumno(): bool
-    {
-        return $this->alumno()->exists();
+public function esAlumno(): bool
+{
+    if (!$this->relationLoaded('alumno')) {
+        $this->load('alumno');
     }
+    return $this->alumno !== null &&
+           $this->estado == 1 && 
+           $this->alumno->estado == 1;
+}
 
     /**
      * Verificar si el usuario es un docente
      */
-    public function esDocente(): bool
-    {
-        return $this->docente()->exists();
+public function esDocente(): bool
+{
+    if (!$this->relationLoaded('docente')) {
+        $this->load('docente');
     }
+        return $this->docente !== null && 
+           $this->estado == 1 && 
+           $this->docente->estado == 1;
+}
 
     /**
      * Verificar si el usuario es un superusuario
      * Solo los docentes pueden ser superusuarios
      */
-    public function esSuperusuario(): bool
-    {
-        return $this->esDocente() && $this->docente->es_superusuario == 1;
+
+     public function esSuperusuario(): bool
+{
+    // Cargar relación docente si no está cargada
+    if (!$this->relationLoaded('docente')) {
+        $this->load('docente');
     }
+    
+    // Verificar que existe docente y es superusuario
+    return $this->estado == 1 &&
+           $this->docente && 
+           $this->docente->estado == 1 &&
+           $this->docente->es_superusuario == 1;
+}
 
     /**
      * Obtener el rol principal del usuario
