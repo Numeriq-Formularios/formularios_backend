@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void {
         Schema::create('docente_especializaciones', function (Blueprint $table) {
-            $table->id();
             $table->foreignId('id_docente')->constrained('docentes')->onDelete('cascade');
             $table->foreignId('id_especializacion')->constrained('especializaciones')->onDelete('cascade');
             $table->timestamps();
+
+
+            //Definimos la clave primaria compuesta por id_docente e id_especializacion
+            $table->primary(['id_docente', 'id_especializacion']);
+            // Creamos un índice para buscar especializaciones de un docente
+            $table->index(['id_docente', 'id_especializacion']);
+            // Creamos un índice para buscar docentes de una especialización
+            $table->index(['id_especializacion', 'id_docente']);
         });
     }
 

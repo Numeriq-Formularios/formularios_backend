@@ -18,7 +18,7 @@ class EnsureUserIsAlumno
      public function handle(Request $request, Closure $next): Response
 {
     // Obtener el usuario autenticado
-    $usuario = $request->user();  
+    $usuario = $request->user(); 
 
     if (!$usuario) {
         return response()->json([
@@ -26,7 +26,20 @@ class EnsureUserIsAlumno
         ], 401);
     }
 
-    // Verificar si es alumno
+
+    //antes de comprobar si quiera si es un usuario, comprobar si es superusuario
+
+    if($usuario->tieneRol('superusuario')){
+
+         return $next($request);
+    }
+
+
+
+
+
+
+    // Verificar si es alumno   
     if (!$usuario->tieneRol('alumno')) {
         return response()->json([
             'message' => 'Acceso denegado. Se requiere rol de alumno.',

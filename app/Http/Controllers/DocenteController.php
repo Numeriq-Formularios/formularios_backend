@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Docente; // Assuming you have a Docente model
 use App\Models\Usuario; // Assuming you have a Usuario model
+use App\Models\Especializacion;
 
 class DocenteController extends Controller
 {
@@ -19,7 +20,6 @@ class DocenteController extends Controller
             'titulo_profesional' => 'required|string|max:255',
             'linkedin' => 'required|string|max:255',
             'es_superusuario' => 'nullable|in:true,false,1,0,"1","0"',
-
         ]);
 
         //Se crea una instancia del modelo Usuario
@@ -27,7 +27,7 @@ class DocenteController extends Controller
         $usuario->nombre = $data['nombre'];
         $usuario->correo = $data['correo'];
         $usuario->clave = bcrypt($data['clave']); // Encriptar la contraseña
-        $usuario->estado = true;// Por defecto, el usuario está activo
+        $usuario->estado = true; // Por defecto, el usuario está activo
         $usuario->save();
 
 
@@ -176,17 +176,17 @@ class DocenteController extends Controller
             $usuario->foto_perfil = asset("storage/images/{$imagename}");
         }
 
-        if(isset($data['titulo_profesional'])) {
+        if (isset($data['titulo_profesional'])) {
             // Actualizar el titulo profesional del docente
             $usuario->docente->titulo_profesional = $data['titulo_profesional'];
         }
 
-        if(isset($data['linkedin'])) {
+        if (isset($data['linkedin'])) {
             // Actualizar el linkedin del docente
             $usuario->docente->linkedin = $data['linkedin'];
         }
 
-        if(isset($data['es_superusuario'])) {
+        if (isset($data['es_superusuario'])) {
             // Actualizar si es superusuario
             $usuario->docente->es_superusuario = filter_var($data['es_superusuario'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
@@ -201,7 +201,7 @@ class DocenteController extends Controller
     }
 
 
-        public function destroy($id)
+    public function destroy($id)
     {
         // Buscar usuario por ID que esté activo y sea docente
         $usuario = Usuario::where('id', $id)
@@ -312,17 +312,17 @@ class DocenteController extends Controller
             $usuario->foto_perfil = asset("storage/images/{$imagename}");
         }
 
-        if(isset($data['titulo_profesional'])) {
+        if (isset($data['titulo_profesional'])) {
             // Actualizar el titulo profesional del docente
             $usuario->docente->titulo_profesional = $data['titulo_profesional'];
         }
 
-        if(isset($data['linkedin'])) {
+        if (isset($data['linkedin'])) {
             // Actualizar el linkedin del docente
             $usuario->docente->linkedin = $data['linkedin'];
         }
 
-        if(isset($data['es_superusuario'])) {
+        if (isset($data['es_superusuario'])) {
             // Actualizar si es superusuario
             $usuario->docente->es_superusuario = filter_var($data['es_superusuario'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
@@ -336,6 +336,131 @@ class DocenteController extends Controller
         ]);
     }
 
+    //Listar las especializaciones que tiene un docente
+    public function Especialidades(Request $request)
+    {
+
+        $usuario = $request->user();
+
+        if (!$usuario || !$usuario->docente) {
+            return response()->json([
+                'message' => 'Usuario no autenticado o no es un docente activo',
+            ], 401);
+        }
+
+        $docente = Docente::where('id', $usuario->docente->id)
+            ->where('estado', true)
+            ->with('especializaciones')
+            ->first();
+
+        if (!$docente) {
+            return response()->json([
+                'message' => 'Usuario no es un docente activo',
+            ], 403);
+        }
+
+        //Busco las especilizaciones del docente
+        if ($docente->especializaciones->isEmpty()) {  
+            return response()->json([
+                'message' => 'El docente no tiene especializaciones asignadas',
+            ], 404);
+        }
+
+        return response()->json([
+            'especializaciones' => $docente->especializaciones,
+        ], 200);
+    }
 
 
+    public function PonerEspecialidad(Request $request, $id)
+    {
+        $usuario = $request->user();
+
+        if (!$usuario || !$usuario->docente) {
+            return response()->json([
+                'message' => 'Usuario no autenticado o no es un docente activo',
+            ], 401);
+        }
+
+        //Obtener el id del usuario autenticado que es alumno
+        $idUsuarioDocente = $usuario->docente->id;
+
+
+        //Verifica si el usuario autenticado es docente y esta activo
+        $docente = Docente::where('id', $idUsuarioDocente)->where('estado', true)->first();
+
+
+        if (!$docente) {
+            return response()->json([
+                'message' => 'Usuario no es un docente activo',
+            ], 403);
+        }
+
+        //Busco la especialidad por id que se le haya pasado
+        $especilizacion = Especializacion::where('id', $id)->first();
+
+
+        if (!$especilizacion) {
+            return response()->json([
+                'message' => 'Especializacion no encontrada o no disponible',
+            ], 404);
+        }
+
+        //Verificar si el usuario ya tiene esta especilizacion
+        $tieneEspecilizacion = $docente->especializaciones()->where('id_especializacion', $id)->exists();
+
+
+        if ($tieneEspecilizacion) {
+            return response()->json([
+                'message' => 'El docente ya tiene esta especialización',
+            ], 400);
+        }
+
+        //Se agrega la especializacion al docente
+        $docente->especializaciones()->attach($id);
+
+        return response()->json([
+            'message' => 'Especialización asignada correctamente al docente',
+            'especializacion' => $especilizacion
+        ], 200);
+    }
+
+
+    public function EliminarEspecialidad(Request $request, $id)
+    {
+        $usuario = $request->user();
+
+        if (!$usuario || !$usuario->docente) {
+            return response()->json([
+                'message' => 'Usuario no autenticado o no es un docente activo',
+            ], 401);
+        }
+
+        $docente = Docente::where('id', $usuario->docente->id)
+            ->where('estado', true)
+            ->first();
+
+        if (!$docente) {
+            return response()->json([
+                'message' => 'Usuario no es un docente activo',
+            ], 403);
+        }
+
+        // Verificar si el docente tiene esta especialización
+        $especilizacion = $docente->especializaciones()->where('id_especializacion', $id)->first();
+
+        if (!$especilizacion) {
+            return response()->json([
+                'message' => 'El docente no tiene esta especialización',
+            ], 404);
+        }
+
+        // Eliminar la especialización usando detach
+        $docente->especializaciones()->detach($id);
+
+        return response()->json([
+            'message' => 'Especialización eliminada correctamente',
+            'especilizacion_eliminada' => $especilizacion,
+        ], 200);
+    }
 }

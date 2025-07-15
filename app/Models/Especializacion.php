@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Docente;
 
 class Especializacion extends Model
 {
@@ -22,7 +23,7 @@ class Especializacion extends Model
 
         public function especializaciones(): BelongsToMany
     {
-        return $this->belongsToMany(Especializacion::class, 'docente_especializaciones','id_especializacion', 'id_docente');
+        return $this->belongsToMany(Docente::class, 'docente_especializaciones','id_especializacion', 'id_docente')->withTimestamps();
 
     }
 
