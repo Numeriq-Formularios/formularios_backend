@@ -7,6 +7,8 @@ use App\Models\Alumno; //Modelo de Alumno
 use App\Models\Usuario; //Modelo de Usuario
 use App\Models\CursoAlumno;
 use App\Models\Curso; //Modelo de Curso
+use App\Models\intentoActividadExamen; // Modelo para manejar los intentos de actividades de examen
+use App\Models\IntentoActividadPractica; // Modelo para manejar los intentos de actividades de práctica
 
 use Illuminate\Http\JsonResponse;  // Para manejar las respuestas JSON
 use function Laravel\Prompts\error;
@@ -409,11 +411,4 @@ class AlumnoController extends Controller
     }
 
     // Métodos para manejar las actividades del alumno
-    public function intentoActividadExamen() {
-
-    }
-
-    public function intentoActividadPractica() {
-
-    }
 }
