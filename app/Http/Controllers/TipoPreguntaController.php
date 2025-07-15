@@ -30,7 +30,11 @@ class TipoPreguntaController extends Controller
 
 public function show($id)
 {
-    $tipoPregunta = TipoPregunta::findOrFail($id);
+    $tipoPregunta = TipoPregunta::find($id);
+
+    if(!$tipoPregunta) {
+        return response()->json(['message' => 'Tipo de Pregunta no encontrada'], 404);
+    }
     return response()->json($tipoPregunta);
 }
 

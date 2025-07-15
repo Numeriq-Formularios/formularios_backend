@@ -26,19 +26,7 @@ class EnsureUserIsAlumno
         ], 401);
     }
 
-
-    //antes de comprobar si quiera si es un usuario, comprobar si es superusuario
-
-    if($usuario->tieneRol('superusuario')){
-
-         return $next($request);
-    }
-
-
-
-
-
-
+    
     // Verificar si es alumno   
     if (!$usuario->tieneRol('alumno')) {
         return response()->json([

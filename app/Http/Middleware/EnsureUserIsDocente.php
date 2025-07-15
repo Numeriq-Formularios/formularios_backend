@@ -26,6 +26,13 @@ class EnsureUserIsDocente
         ], 401);
     }
 
+        //antes de comprobar si quiera si es un usuario, comprobar si es superusuario
+
+    if($usuario->tieneRol('superusuario')){
+
+         return $next($request);
+    }
+
     // Verificar si es doente
     if (!$usuario->tieneRol('docente')) {
         return response()->json([
