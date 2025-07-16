@@ -7,6 +7,7 @@ use App\Models\Especializacion;
 use App\Models\TipoPregunta;
 use App\Models\User;
 use App\Models\Usuario;
+use App\Models\Pregunta;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             DocenteSeeder::class,
             AlumnoSeeder::class,
             DocenteEspecializacionSeeder::class,
+            PreguntaSeeder::class,
         ]);
     }
 }
