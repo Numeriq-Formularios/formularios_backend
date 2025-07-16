@@ -23,7 +23,6 @@ class Curso extends Model
         'id_asignatura',
         'nombre',
         'descripcion',
-        'imagen',
         'fecha_inicio',
         'fecha_fin',
         'estado',

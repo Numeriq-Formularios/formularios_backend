@@ -55,7 +55,6 @@ Route::middleware(['auth:sanctum', 'rol.alumno'])->group(function () {
     //Ver resultados de act examen por id.
     //Ver resultados de act practica por id.
 
-
 });
 
 
