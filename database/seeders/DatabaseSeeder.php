@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
             PreguntaSeeder::class,
 
             CursoSeeder::class,
+            CursoAlumnoSeeder::class,
+            
         ]);
     }
 }
