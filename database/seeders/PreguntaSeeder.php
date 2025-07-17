@@ -210,7 +210,7 @@ public function run(): void
             'estado' => true,
         ],
         [
-            'id_docente' => 2,
+            'id_docente' => 3,
             'id_tema' => 10,
             'id_nivel_bloom' => 2,
             'id_dificultad' => 2,

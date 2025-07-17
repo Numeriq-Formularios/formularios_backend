@@ -53,7 +53,7 @@ class ActividadExamen extends Model
         //Relacion de actividadExamen con preguntaActividadExamen con la tabla padre pregunta n: n 
     public function preguntas(): BelongsToMany
     {
-        return $this->belongsToMany(Pregunta::class, 'pregunta_actividad_examen', 'id_actividad_examen', 'id_pregunta')
+        return $this->belongsToMany(Pregunta::class, 'pregunta_actividad_examenes', 'id_actividad_examen', 'id_pregunta')
         ->using(PreguntaActividadExamen::class)
         ->withPivot('orden')
         ->withTimestamps();

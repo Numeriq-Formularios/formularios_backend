@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
             AlumnoSeeder::class,
             DocenteEspecializacionSeeder::class,
             PreguntaSeeder::class,
+
+            CursoSeeder::class,
         ]);
     }
 }
