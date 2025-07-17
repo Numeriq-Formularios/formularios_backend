@@ -78,7 +78,6 @@ class PreguntaController extends Controller
         $pregunta = Pregunta::findOrFail($id);
         // Validar los datos de entrada
         $validated = $request->validate([
-            'id_docente' => 'required|exists:docentes,id',
             'id_tema' => 'required|exists:temas,id',
             'id_nivel_bloom' => 'required|exists:nivel_blooms,id',
             'id_dificultad' => 'required|exists:dificultades,id',
@@ -87,6 +86,9 @@ class PreguntaController extends Controller
             'explicacion' => 'nullable|string|max:255',
             'estado' => 'required|boolean',
         ]);
+            // el docente autenticado sea el que actualiza:
+    $usuario = $request->user();
+    $pregunta->id_docente = $usuario->id;
         // Actualizar la pregunta con los datos validados
         $pregunta->update($validated);
         // Devolver la pregunta actualizada como respuesta
