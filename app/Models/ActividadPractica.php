@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Docente;
 use App\Models\Curso;
 use App\Models\PreguntaActividadPractica;
+use App\Models\Pregunta;
 
 class ActividadPractica extends Model
 {
@@ -43,7 +44,7 @@ class ActividadPractica extends Model
     public function preguntas(): BelongsToMany
     {
         return $this->belongsToMany(Pregunta::class, 'pregunta_actividad_practica', 'id_actividad_practica', 'id_pregunta')
-        ->using(PreguntaActividadExamen::class)
+        ->using(PreguntaActividadPractica::class)
         ->withPivot('orden')
         ->withTimestamps();
     }

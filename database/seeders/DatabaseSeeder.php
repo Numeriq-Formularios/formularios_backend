@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Asignatura;
 use App\Models\Especializacion;
+use App\Models\OpcionRespuesta;
 use App\Models\TipoPregunta;
 use App\Models\User;
 use App\Models\Usuario;
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder
             AlumnoSeeder::class,
             DocenteEspecializacionSeeder::class,
             PreguntaSeeder::class,
+            OpcionesRespuestaSeeder::class,
 
             CursoSeeder::class,
             CursoAlumnoSeeder::class,

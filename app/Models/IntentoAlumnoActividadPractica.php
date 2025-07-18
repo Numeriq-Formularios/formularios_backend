@@ -28,4 +28,9 @@ class IntentoAlumnoActividadPractica extends Model
     {
         return $this->belongsTo(ActividadPractica::class, 'id_actividad_practica');
     }
+
+    public function resultados()
+    {
+        return $this->hasMany(ResultadoPreguntaActividadPractica::class, 'id_intento');
+    }
 }
