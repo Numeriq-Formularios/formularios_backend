@@ -360,7 +360,7 @@ class DocenteController extends Controller
         }
 
         //Busco las especilizaciones del docente
-        if ($docente->especializaciones->isEmpty()) {  
+        if ($docente->especializaciones->isEmpty()) {
             return response()->json([
                 'message' => 'El docente no tiene especializaciones asignadas',
             ], 404);
@@ -461,6 +461,40 @@ class DocenteController extends Controller
         return response()->json([
             'message' => 'Especialización eliminada correctamente',
             'especilizacion_eliminada' => $especilizacion,
+        ], 200);
+    }
+
+    public function destroyMe(Request $request)
+    {
+        //Me traigo el usuario autenticado
+        $usuario = $request->user();
+
+        // Buscar usuarioDocente por ID que esté activo y sea docente
+        $usuarioDocente = Usuario::where('id', $usuario->id)
+            ->where('estado', true)
+            ->whereHas('docente', function ($query) {
+                $query->where('estado', true); // Solo docentes activos
+            })
+            ->with('docente') // Incluir datos del docente
+            ->first();
+
+        if (!$usuarioDocente) {
+            return response()->json([
+                'message' => 'Usuario no encontrado o ya está eliminado'
+            ], 404);
+        }
+
+        // Eliminar lógicamente al usuario
+        $usuario->estado = false;
+        $usuario->save();
+
+        // Eliminar lógicamente al docente asociado
+        $usuario->docente->estado = false;
+        $usuario->docente->save();
+
+        return response()->json([
+            'message' => 'Usuario eliminado correctamente',
+            'usuario' => $usuario,
         ], 200);
     }
 }

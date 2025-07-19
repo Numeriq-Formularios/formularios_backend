@@ -86,21 +86,9 @@ class AlumnoPolicy
     }
 
 
-    public function intentoActividadExamen(Usuario $usuario): bool
-    {
-        return  $usuario->esAlumno();
-    }
-
-
     public function restore(Usuario $usuario, Alumno $alumno): bool
     {
         return false;
-    }
-
-
-    public function intentoActividadPractica(Usuario $usuario): bool
-    {
-        return  $usuario->esAlumno();
     }
 
 

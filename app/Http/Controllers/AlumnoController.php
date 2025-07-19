@@ -496,11 +496,4 @@ class AlumnoController extends Controller
             'cursos' => $cursos,
         ], 200);
     }
-
-    // Métodos para manejar las actividades del alumno
-    //Esta funcion solo esta disponible para los alumnos
-    public function intentoActividadExamen() {}
-
-    //Esta funcion solo esta disponible para los alumnos
-    public function intentoActividadPractica() {}
 }

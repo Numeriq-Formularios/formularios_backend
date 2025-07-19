@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\Actividad\ActividadPracticaController;
 use App\Http\Controllers\Actividad\PreguntaActividadPracticaController;
 use App\Http\Controllers\Intento\IntentoExamenController;
@@ -45,12 +46,11 @@ Route::middleware(['auth:sanctum', 'rol.alumno'])->group(function () {
     //Rutas para la interaccion del alumno con los cursos
     Route::post('/usuario/alumno/curso/{id}', [AlumnoController::class, 'incribirCurso']); // Aqui esta la posibilidad en inscribir un alumno a un curso
     Route::get('/usuario/alumno/cursos', [AlumnoController::class, 'misCursos']); //Los cusos a los que esta inscrito el alumno 
-    //Darse de baja de un curso
+    
 
     //Intento examen
     Route::post('/intento/examen', [IntentoExamenController::class, 'store']); //Pertmite al alumno iniciar un intento de la actividad examen
     Route::get('/intentos/examen', [IntentoExamenController::class, 'misIntentos']); //Permite al alumno ver sus intentos de actividad examen
-    //Ver resultados de act examen por id.
 
     //Responder durante el intento tipo examen {idIntento}
     Route::post('/intento/examen/{id}/responder', [IntentoExamenController::class, 'responderPregunta']); //Permite al alumno responder por pregunta durante el intento de la actividad examen
@@ -64,7 +64,6 @@ Route::middleware(['auth:sanctum', 'rol.alumno'])->group(function () {
     //Responder durante el intento tipo practica {idIntento}
     Route::post('/intento/practica/{id}/responder', [IntentoPracticaController::class, 'responderPregunta']); //Permite al alumno responder por pregunta durante el intento de la actividad practica
     Route::post('/intento/practica/{id}/finalizar', [IntentoPracticaController::class, 'finalizarIntento']); //Permite al alumno finalizar el intento de la actividad practica
-    //Ver resultados de act practica por id.
 
 });
 
@@ -104,7 +103,7 @@ Route::middleware(['auth:sanctum', 'rol.docente'])->group(function () {
     Route::get('/opcion-respuestas/{id}', [OpcionRespuestaController::class, 'show']); //Se trae una opcion de respuesta en concreto por id
     Route::put('/opcion-respuestas/{id}', [OpcionRespuestaController::class, 'update']); //Se actualiza una opcion de respuesta en concreto por id
     //Traer todas las opciones de respuesta por id_pregunta
-    //Traer una opcion de respuesta por id_pregunta y id_opcion_respuesta
+
 
     //Rutas para cursos
     Route::post('/curso', [CursoController::class, 'store']); //Creacion de un curso
@@ -170,10 +169,8 @@ Route::middleware(['auth:sanctum', 'rol.docente'])->group(function () {
 
 
     /*
-
     Recordemos que un superusuario es un docente, por lo tanto, las rutas que estan
     debajo de este middleware son exclusivas para el superusuario.
-
     */
 
 
@@ -182,17 +179,14 @@ Route::middleware(['auth:sanctum', 'rol.docente'])->group(function () {
         //Rutas solo accesibles para el superusuario CRUD de los alumnos
         Route::get('/usuarios/alumnos', [AlumnoController::class, 'index']); //Listar todos los usuarios alumnos
         Route::get('/usuario/alumno/{id}', [AlumnoController::class, 'show']); //Mostar un alumno en concreto
-        Route::put('/usuario/alumno/{id}', [AlumnoController::class, 'update']); //Actualizar un usuario en concreto
+        Route::post('/usuario/alumno/{id}', [AlumnoController::class, 'update']); //Actualizar un usuario en concreto
         Route::delete('/usuario/alumno/{id}', [AlumnoController::class, 'destroy']); //Eliminado logico de un usaurio en concreto
-        //Route::post('/usuario/alumno/curso/{id}', [AlumnoController::class, 'incribirCurso']); //Inscribir a un alumno en cincreto
-        //Route::get('/usuario/alumno/{id}/cursos', [AlumnoController::class, 'misCursos']); //Los cursos a los que esta inscrito un alumno en concreto
-        //Route::post('/usuario/alumno/curso/{id}', [AlumnoController::class, 'DesincribirCurso']); //Desincribir a un alumno de un curso en concreto
 
         //Rutas solo accesibles para el superusuario CRUD de los docentes
         Route::post('/singup/usuario/docente', [DocenteController::class, 'register']);  //Solo el superusuario puede crear un docente o un superusuario
         Route::get('/usuarios/docentes/', [DocenteController::class, 'index']); //Lista de docentes
         Route::get('/usuario/docente/{id}', [DocenteController::class, 'show']); //Muestra un docente en especifico
-        Route::put('/usuario/docente/{id}', [DocenteController::class, 'update']); //Actualiza un docente en especifico
+        Route::post('/usuario/docente/{id}', [DocenteController::class, 'update']); //Actualiza un docente en especifico
         Route::delete('/usuario/docente/{id}', [DocenteController::class, 'destroy']); //Elimina un docente en especifico
 
 
@@ -215,34 +209,34 @@ Route::middleware(['auth:sanctum', 'rol.docente'])->group(function () {
         // RUTAS PARA INTENTO PRACTICA
         Route::get('/intentos/practicas', [IntentoPracticaController::class, 'index']); // si funciona
         Route::get('/intento/practica/{id}', [IntentoPracticaController::class, 'show']); // Si funciona
-        Route::post('/intento/practica/{id}', [IntentoPracticaController::class, 'update']); // Si funciona
+        Route::put('/intento/practica/{id}', [IntentoPracticaController::class, 'update']); // Si funciona
         Route::delete('/intento/practica/{id}', [IntentoPracticaController::class, 'destroy']); // Si funciona
 
         // RUTAS PARA INTENTO EXAMEN
         Route::get('/intentos/examenenes', [IntentoExamenController::class, 'index']); // Si funciona
         Route::get('/intento/examen/{id}', [IntentoExamenController::class, 'show']); // Si funciona
-        Route::post('/intento/examen/{id}', [IntentoExamenController::class, 'update']); // Si funciona
+        Route::put('/intento/examen/{id}', [IntentoExamenController::class, 'update']); // Si funciona
         Route::delete('/intento/examen/{id}', [IntentoExamenController::class, 'destroy']); // Si funciona
 
         // RUTAS PARA RESULTADO actividad tipo PRACTICA
         Route::get('/resultados/practica', [ResultadoPracticaController::class, 'index']); // Si funciona
         Route::get('/resultado/practica/{id}', [ResultadoPracticaController::class, 'show']); // Si funciona
         Route::post('/resultado/practica', [ResultadoPracticaController::class, 'store']); // Si funciona
-        Route::post('/resultado/practica/{id}', [ResultadoPracticaController::class, 'update']); // Si funciona
+        Route::put('/resultado/practica/{id}', [ResultadoPracticaController::class, 'update']); // Si funciona
         Route::delete('/resultado/practica/{id}', [ResultadoPracticaController::class, 'destroy']); // Si funciona
 
         // RUTAS PARA RESULTADO actividad tipo  EXAMEN
         Route::get('/resultados/examen', [ResultadoExamenController::class, 'index']); // Si funciona
         Route::get('/resultado/examen/{id}', [ResultadoExamenController::class, 'show']); // Si funciona
         Route::post('/resultado/examen', [ResultadoExamenController::class, 'store']); // Si funciona
-        Route::post('/resultado/examen/{id}', [ResultadoExamenController::class, 'update']); // Si funciona
+        Route::put('/resultado/examen/{id}', [ResultadoExamenController::class, 'update']); // Si funciona
         Route::delete('/resultado/examen/{id}', [ResultadoExamenController::class, 'destroy']); // Si funciona
 
         // Rutas para Actividad Examen
         Route::delete('/actividad-examenes/{id}', [ActividadExamenController::class, 'destroy']);
 
         //Ruta para Actividad Practica 
-        Route::get('/actividad/practica/{id}', [ActividadPracticaController::class, 'destroy']);
+        Route::delete('/actividad/practica/{id}', [ActividadPracticaController::class, 'destroy']);
 
         // Rutas para Nivel Bloom
         Route::delete('/nivel-blooms/{id}', [NivelBloomController::class, 'destroy']); // Elimina un nivel de bloom en concreto por id
